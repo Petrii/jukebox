@@ -18,13 +18,8 @@ import com.spotify.sdk.android.player.PlayerState;
 public class MainActivity extends Activity implements
         PlayerNotificationCallback, ConnectionStateCallback {
 
-    // TODO: Replace with your client ID
     private static final String CLIENT_ID = "5edab87c1536471aab90d32d5c528875";
-    // TODO: Replace with your redirect URI
     private static final String REDIRECT_URI = "lbjukebox://callback";
-
-    // Request code that will be passed together with authentication result to the onAuthenticationResult callback
-    // Can be any integer
     private static final int REQUEST_CODE = 1337;
 
     private Player mPlayer;
