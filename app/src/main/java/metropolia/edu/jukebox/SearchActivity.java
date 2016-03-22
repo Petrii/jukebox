@@ -18,6 +18,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+
         SpotifyApi webApi = new SpotifyApi();
         SpotifyService webApiService = webApi.getService();
 
