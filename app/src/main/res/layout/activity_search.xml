@@ -21,10 +21,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hae"
         android:id="@+id/searchSubmit"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:background="@null"/>
 
     <ListView
         android:layout_width="wrap_content"
