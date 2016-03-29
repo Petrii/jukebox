@@ -1,8 +1,11 @@
 package metropolia.edu.jukebox;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -12,26 +15,19 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class SearchActivity extends AppCompatActivity {
-
+    static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        Intent intent = getIntent();
+        String token = intent.getStringExtra(EXTRA_TOKEN);
 
-        SpotifyApi webApi = new SpotifyApi();
-        SpotifyService webApiService = webApi.getService();
+        ListView searchView = (ListView)findViewById(R.id.search_results);
+    }
 
-        webApiService.getAlbum("2dIGnmEIy1WZIcZCFSj6i8", new Callback<Album>() {
-            @Override
-            public void success(Album album, Response response) {
-                Log.d("Album success", album.name);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d("Album failure", error.toString());
-            }
-        });
+    public static Intent createIntent(Context context){
+        return new Intent(context, SearchActivity.class);
     }
 }
