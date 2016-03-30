@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -20,10 +23,37 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements Search.View {
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
-    private Search mActionListener;
-    private SearchResultAdapter mAdapter;
+    private static final String KEY_CURRENT_QUERY = "CURRENT_QUERY";
+
+    private Search.ActionListener mActionListener;
+    private LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+    private ScrollListener mScrollListener = new ScrollListener(mLayoutManager);
+    private SearchResultsAdapter mAdapter;
+
+    @Override
+    public void reset() {
+        mScrollListener.reset();
+        mAdapter.clearData();
+    }
+
+    @Override
+    public void addData(List<Track> items) {
+        mAdapter.addData(items);
+    }
+
+    private class ScrollListener extends ResultListScrollListener {
+
+        public ScrollListener(LinearLayoutManager layoutManager) {
+            super(layoutManager);
+        }
+
+        @Override
+        public void onLoadMore() {
+            mActionListener.loadMoreResults();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +63,15 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String accessToken = intent.getStringExtra(EXTRA_TOKEN);
 
-        mActionListener = new Search(accessToken);
-        mAdapter = new SearchResultAdapter(this);
+        mActionListener = new SearchPresenter(this, this);
+        mActionListener.init(accessToken);
 
-        final SearchView searchView = (SearchView)findViewById(R.id.search_view);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+        // Setup search field
+        final SearchView searchView = (SearchView) findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mActionListener.search(query);
-                mAdapter.addData(mActionListener.getResults());
                 searchView.clearFocus();
                 return true;
             }
@@ -51,8 +81,26 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
-        ListView resultList = (ListView)findViewById(R.id.search_results);
-        resultList.setAdapter(mAdapter);
+
+
+        // Setup search results list
+        mAdapter = new SearchResultsAdapter(this, new SearchResultsAdapter.ItemSelectedListener() {
+            @Override
+            public void onItemSelected(View itemView, Track item) {
+                mActionListener.selectTrack(item);
+            }
+        });
+        RecyclerView resultsList = (RecyclerView) findViewById(R.id.search_results);
+        resultsList.setHasFixedSize(true);
+        resultsList.setLayoutManager(mLayoutManager);
+        resultsList.setAdapter(mAdapter);
+        resultsList.addOnScrollListener(mScrollListener);
+
+        // If Activity was recreated wit active search restore it
+        if (savedInstanceState != null) {
+            String currentQuery = savedInstanceState.getString(KEY_CURRENT_QUERY);
+            mActionListener.search(currentQuery);
+        }
     }
 
     public static Intent createIntent(Context context){
