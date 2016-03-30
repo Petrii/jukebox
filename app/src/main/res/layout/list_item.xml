@@ -3,43 +3,40 @@
     android:orientation="horizontal"
     android:layout_marginBottom="5dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/entity_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:contentDescription="Cover art"/>
+        android:contentDescription="Cover art"
+        android:layout_marginRight="8dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/entity_title"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="30dp"
             android:ellipsize="marquee"
             android:gravity="bottom"
             android:maxLines="1"
             android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/entity_subtitle"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="30dp"
             android:ellipsize="marquee"
             android:gravity="top"
             android:maxLines="1"
             android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 

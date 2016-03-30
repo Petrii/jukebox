@@ -32,17 +32,6 @@ public class SearchActivity extends AppCompatActivity implements Search.View {
     private ScrollListener mScrollListener = new ScrollListener(mLayoutManager);
     private SearchResultsAdapter mAdapter;
 
-    @Override
-    public void reset() {
-        mScrollListener.reset();
-        mAdapter.clearData();
-    }
-
-    @Override
-    public void addData(List<Track> items) {
-        mAdapter.addData(items);
-    }
-
     private class ScrollListener extends ResultListScrollListener {
 
         public ScrollListener(LinearLayoutManager layoutManager) {
@@ -105,5 +94,42 @@ public class SearchActivity extends AppCompatActivity implements Search.View {
 
     public static Intent createIntent(Context context){
         return new Intent(context, SearchActivity.class);
+    }
+
+    @Override
+    public void reset() {
+        mScrollListener.reset();
+        mAdapter.clearData();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mActionListener.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mActionListener.resume();
+    }
+
+    @Override
+    public void addData(List<Track> items) {
+        mAdapter.addData(items);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mActionListener.getCurrentQuery() != null) {
+            outState.putString(KEY_CURRENT_QUERY, mActionListener.getCurrentQuery());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mActionListener.destroy();
+        super.onDestroy();
     }
 }
