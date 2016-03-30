@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_search){
+            // TÄHÄN FRAGMENTTI ACTIVITYN TILALLE
             Intent intent = SearchActivity.createIntent(this);
             intent.putExtra(SearchActivity.EXTRA_TOKEN, CredentialsHandler.getToken(this));
             startActivity(intent);

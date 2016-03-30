@@ -1,10 +1,6 @@
 package metropolia.edu.jukebox;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -27,20 +23,6 @@ public class SearchPresenter implements Search.ActionListener {
     private SearchPager mSearchPager;
     private SearchPager.CompleteListener mSearchListener;
 
-    //private Player mPlayer;
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-           // mPlayer = ((PlayerService.PlayerBinder) service).getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            //mPlayer = null;
-        }
-    };
-
     public SearchPresenter(Context context, Search.View view) {
         mContext = context;
         mView = view;
@@ -56,10 +38,7 @@ public class SearchPresenter implements Search.ActionListener {
         } else {
             logError("No valid access token");
         }
-
         mSearchPager = new SearchPager(spotifyApi.getService());
-
-       // mContext.bindService(PlayerService.getIntent(mContext), mServiceConnection, Activity.BIND_AUTO_CREATE);
     }
 
 
@@ -84,26 +63,10 @@ public class SearchPresenter implements Search.ActionListener {
         }
     }
 
-
-    @Override
-    public void destroy() {
-        mContext.unbindService(mServiceConnection);
-    }
-
     @Override
     @Nullable
     public String getCurrentQuery() {
         return mCurrentQuery;
-    }
-
-    @Override
-    public void resume() {
-        //mContext.stopService(PlayerService.getIntent(mContext));
-    }
-
-    @Override
-    public void pause() {
-        //mContext.startService(PlayerService.getIntent(mContext));
     }
 
     @Override
@@ -114,24 +77,22 @@ public class SearchPresenter implements Search.ActionListener {
 
     @Override
     public void selectTrack(Track item) {
-        /*String previewUrl = item.preview_url;
 
-        if (previewUrl == null) {
-            logMessage("Track doesn't have a preview");
-            return;
-        }
+    }
 
-        if (mPlayer == null) return;
+    @Override
+    public void resume() {
 
-        String currentTrackUrl = mPlayer.getCurrentTrack();
+    }
 
-        if (currentTrackUrl == null || !currentTrackUrl.equals(previewUrl)) {
-            mPlayer.play(previewUrl);
-        } else if (mPlayer.isPlaying()) {
-            mPlayer.pause();
-        } else {
-            mPlayer.resume();
-        }*/
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void destroy() {
+
     }
 
     private void logError(String msg) {

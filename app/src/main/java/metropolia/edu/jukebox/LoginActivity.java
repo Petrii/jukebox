@@ -3,6 +3,7 @@ package metropolia.edu.jukebox;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -20,14 +21,13 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_login);
 
         String token = CredentialsHandler.getToken(this);
         // Check if logged in Spotify account
         if( token == null ){
             setContentView(R.layout.activity_login);
         }else{
-            startMainActivity(token); // This is now temporally, should open Queue view
+            startMainActivity(token);
         }
     }
 
@@ -50,19 +50,19 @@ public class LoginActivity extends Activity {
             switch (response.getType()) {
                 // Response was successful and contains auth token
                 case TOKEN:
-                    //Got token: response.getAccessToken()
+                    Log.d("Got token", ""+response.getAccessToken());
                     CredentialsHandler.setToken(this, response.getAccessToken(), response.getExpiresIn(), TimeUnit.SECONDS);
                     startMainActivity(response.getAccessToken());
                     break;
 
                 // Auth flow returned an error
                 case ERROR:
-                    //Auth result: response.getError()
+                    Log.d("Auth error",""+response.getError());
                     break;
 
                 // Most likely auth flow was cancelled
                 default:
-                   //Auth result: response.getType()
+                    Log.d("Auth result",""+response.getType());
             }
         }
     }
