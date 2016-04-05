@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.search;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.widget.SearchView;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Track;
+import metropolia.edu.jukebox.R;
 
 
 public class SearchActivity extends AppCompatActivity implements Search.View {

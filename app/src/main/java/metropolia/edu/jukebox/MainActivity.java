@@ -5,6 +5,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import metropolia.edu.jukebox.queue.QueueFragment;
+import metropolia.edu.jukebox.search.SearchFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     public static String TOKEN;

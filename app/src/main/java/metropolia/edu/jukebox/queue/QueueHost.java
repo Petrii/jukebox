@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.queue;
 
 import android.os.Handler;
 import android.util.Log;

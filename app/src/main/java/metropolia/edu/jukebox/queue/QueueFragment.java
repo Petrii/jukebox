@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.queue;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.os.Handler;
+
+import metropolia.edu.jukebox.R;
+import metropolia.edu.jukebox.WifiLocalServiceHelper;
 
 /**
  * Created by petri on 30.3.2016.

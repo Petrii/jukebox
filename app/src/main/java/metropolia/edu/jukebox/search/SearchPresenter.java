@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.search;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
