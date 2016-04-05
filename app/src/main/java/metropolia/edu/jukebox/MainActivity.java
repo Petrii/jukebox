@@ -1,38 +1,36 @@
 package metropolia.edu.jukebox;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
-import com.spotify.sdk.android.player.Player;
 
 public class MainActivity extends AppCompatActivity {
-    private Player mPlayer;
+
+    public static String TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TOKEN = CredentialsHandler.getToken(this);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        setupViewPager(viewPager);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_queue_music_white_48dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_search_white_48dp);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_white_48dp);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_search){
-            // TÄHÄN FRAGMENTTI ACTIVITYN TILALLE
-            Intent intent = SearchActivity.createIntent(this);
-            intent.putExtra(SearchActivity.EXTRA_TOKEN, CredentialsHandler.getToken(this));
-            startActivity(intent);
-        }
-        return true;
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new QueueFragment(), "Queue");
+        adapter.addFrag(new SearchFragment(), "Search");
+        adapter.addFrag(new SettingsFragment(), "Settings");
+        viewPager.setAdapter(adapter);
     }
 }

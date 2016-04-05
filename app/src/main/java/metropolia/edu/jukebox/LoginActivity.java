@@ -22,6 +22,8 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        startMainActivity("joo");
+
         String token = CredentialsHandler.getToken(this);
         // Check if logged in Spotify account
         if( token == null ){
