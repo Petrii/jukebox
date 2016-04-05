@@ -22,14 +22,12 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startMainActivity("joo");
-
         String token = CredentialsHandler.getToken(this);
         // Check if logged in Spotify account
         if( token == null ){
             setContentView(R.layout.activity_login);
         }else{
-            startMainActivity(token);
+            startMainActivity();
         }
     }
 
@@ -40,6 +38,10 @@ public class LoginActivity extends Activity {
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+    }
+
+    public void onJoinButtonClicked(View v){
+        startMainActivity();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class LoginActivity extends Activity {
                 case TOKEN:
                     Log.d("Got token", ""+response.getAccessToken());
                     CredentialsHandler.setToken(this, response.getAccessToken(), response.getExpiresIn(), TimeUnit.SECONDS);
-                    startMainActivity(response.getAccessToken());
+                    startMainActivity();
                     break;
 
                 // Auth flow returned an error
@@ -72,9 +74,8 @@ public class LoginActivity extends Activity {
     *
     * @params String token
     */
-    private void startMainActivity(String token) {
+    private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
-        //intent.putExtra(MainActivity.EXTRA_TOKEN, token);
         startActivity(intent);
         finish();
     }

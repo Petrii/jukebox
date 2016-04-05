@@ -1,109 +1,61 @@
 package metropolia.edu.jukebox.queue;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
-import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.os.Handler;
 
 import metropolia.edu.jukebox.R;
-import metropolia.edu.jukebox.WifiLocalServiceHelper;
+import metropolia.edu.jukebox.search.ResultListScrollListener;
 
 /**
  * Created by petri on 30.3.2016.
  */
-public class QueueFragment extends ListFragment {
+public class QueueFragment extends Fragment {
 
-    WifiLocalServiceHelper mNsdHelper;
-    private TextView mStatusView;
-    private Handler mUpdateHandler;
-    public static final String TAG = "Queue List";
-
-    QueueConnection mQueueConnection;
+    private ScrollListener mScrollListener = new ScrollListener(new LinearLayoutManager(this.getContext()));
+    private QueueListAdapter mAdapter;
+    private View view;
+    private Queue mQueue;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_queue, container, false);
+
+        RecyclerView resultsList = (RecyclerView) view.findViewById(R.id.queue_list);
+        resultsList.setHasFixedSize(true);
+        resultsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        resultsList.setAdapter(mAdapter);
+        resultsList.addOnScrollListener(mScrollListener);
+
         return view;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-                mUpdateHandler = new Handler() {
+        mAdapter = new QueueListAdapter(this.getContext(), new QueueListAdapter.ItemSelectedListener() {
             @Override
-            public void handleMessage(Message msg) {
-                String newTrack = msg.getData().getString("msg");
-                addNewTrack(newTrack);
+            public void onItemSelected(View itemView, Track item) {
+                // mActionListener.selectTrack(item);
             }
-        };
-
-        mQueueConnection = new QueueConnection(mUpdateHandler);
-
-        mNsdHelper = new WifiLocalServiceHelper(this.getContext());
-        mNsdHelper.initializeNsd();
-    }
-    public static Intent createIntent(Context context){
-        return new Intent(context, QueueFragment.class);
+        });
+        mAdapter.addData( new Queue().getQueueList() );
     }
 
-    public void clickAdvertise(View v){
-        if(mQueueConnection.getLocalPort() > -1){
-            mNsdHelper.registerService(mQueueConnection.getLocalPort());
-        }else{
-            Log.d(TAG, "ServerSocket isn't bound.");
+    private class ScrollListener extends ResultListScrollListener {
+
+        public ScrollListener(LinearLayoutManager layoutManager) {
+            super(layoutManager);
         }
-    }
 
-    public void clickDiscover(View v){
-        mNsdHelper.discoverServices();
-    }
-
-    public void clickConnect(View v){
-        NsdServiceInfo service = mNsdHelper.getmServiceInfo();
-        if(service != null){
-            Log.d(TAG, "Connecting...");
-            mQueueConnection.connectToHost(service.getHost(), service.getPort());
-        }else{
-            Log.d(TAG, "No service to connect to!");
+        @Override
+        public void onLoadMore() {
+            //mActionListener.loadMoreResults();
         }
-    }
-
-    public void clickSend(View v){
-        //EditText selectedTrack = (EditText)findViewById(R.id)
-    }
-
-    public void addNewTrack(String line){
-        mStatusView.append("\n" + line);
-    }
-
-    @Override
-    public void onPause() {
-        if(mNsdHelper != null){
-            mNsdHelper.stopDiscovery();
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(mNsdHelper != null){
-            mNsdHelper.discoverServices();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        mNsdHelper.tearDown();
-        mQueueConnection.tearDown();
-        super.onDestroy();
     }
 }

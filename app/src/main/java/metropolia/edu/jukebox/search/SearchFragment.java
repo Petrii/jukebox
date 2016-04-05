@@ -24,17 +24,13 @@ public class SearchFragment extends Fragment implements Search.View {
     private static final String KEY_CURRENT_QUERY = "CURRENT_QUERY";
 
     private Search.ActionListener mActionListener;
-    private LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getContext());
-    private ScrollListener mScrollListener = new ScrollListener(mLayoutManager);
+    private ScrollListener mScrollListener = new ScrollListener(new LinearLayoutManager(this.getContext()));
     private SearchResultsAdapter mAdapter;
     private View view;
-
     private class ScrollListener extends ResultListScrollListener {
-
         public ScrollListener(LinearLayoutManager layoutManager) {
             super(layoutManager);
         }
-
         @Override
         public void onLoadMore() {
             mActionListener.loadMoreResults();
@@ -63,7 +59,7 @@ public class SearchFragment extends Fragment implements Search.View {
 
         RecyclerView resultsList = (RecyclerView) view.findViewById(R.id.search_results);
         resultsList.setHasFixedSize(true);
-        resultsList.setLayoutManager(mLayoutManager);
+        resultsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
         resultsList.setAdapter(mAdapter);
         resultsList.addOnScrollListener(mScrollListener);
 
@@ -92,10 +88,6 @@ public class SearchFragment extends Fragment implements Search.View {
             String currentQuery = savedInstanceState.getString(KEY_CURRENT_QUERY);
             mActionListener.search(currentQuery);
         }
-    }
-
-    public static Intent createIntent(Context context){
-        return new Intent(context, SearchFragment.class);
     }
 
     @Override
