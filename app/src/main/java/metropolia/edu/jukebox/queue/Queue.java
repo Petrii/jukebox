@@ -15,10 +15,6 @@ public class Queue {
         queueList.add(new Track("1","Biisi1","Artisti1"));
     }
 
-    public List<Track> getQueue(){
-        return queueList;
-    }
-
     public void addNewTrack(String id, String name, String artist){
         queueList.add(new Track(id,name,artist));
     }
