@@ -7,9 +7,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-class ViewPagerAdapter extends FragmentPagerAdapter {
+import metropolia.edu.jukebox.queue.QueueFragment;
+
+class ViewPagerAdapter extends FragmentPagerAdapter{
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> fragmentTitles = new ArrayList<>();
+
+    public interface passDataToFragment{
+        void passDataToFragment(String trackId, String trackName, String trackArtist);
+    }
 
     public ViewPagerAdapter(FragmentManager manager) {
         super(manager);

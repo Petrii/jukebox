@@ -2,6 +2,7 @@ package metropolia.edu.jukebox.queue;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import metropolia.edu.jukebox.search.SearchResultsAdapter;
  * Created by petri on 5.4.2016.
  */
 public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolder>{
-
+    private static final String TAG = "QueueListAdapter";
     private final List<Track> mItems = new ArrayList<>();
     private final Context mContext;
     private final ItemSelectedListener mListener;
@@ -63,12 +64,26 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
     }
 
     public void clearData() {
-        mItems.clear();
+        if(!mItems.isEmpty())
+            mItems.clear();
     }
 
     public void addData(List<Track> items) {
         mItems.addAll(items);
         notifyDataSetChanged();
+    }
+
+    public void addNewTrack(String id, String name, String artist){
+        boolean trackIsListed = false;
+        for( Track item : mItems) {
+            if (item.getId() == id) {
+                trackIsListed = true;
+                break;
+            } else {
+                Log.d(TAG, "Track is already in list");
+            }
+        }
+        if(!trackIsListed)mItems.add(new Track(id, name, artist));
     }
 
     @Override

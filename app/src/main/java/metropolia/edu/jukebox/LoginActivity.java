@@ -70,7 +70,7 @@ public class LoginActivity extends Activity {
             }
         }
     }
-    /*
+    /**
     *
     * @params String token
     */

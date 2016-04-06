@@ -1,8 +1,5 @@
 package metropolia.edu.jukebox.search;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,22 +8,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.List;
 
+import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 import metropolia.edu.jukebox.MainActivity;
 import metropolia.edu.jukebox.R;
+import metropolia.edu.jukebox.queue.QueueFragment;
 
 
 public class SearchFragment extends Fragment implements Search.View {
-    static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     private static final String KEY_CURRENT_QUERY = "CURRENT_QUERY";
 
     private Search.ActionListener mActionListener;
     private ScrollListener mScrollListener = new ScrollListener(new LinearLayoutManager(this.getContext()));
     private SearchResultsAdapter mAdapter;
     private View view;
+
     private class ScrollListener extends ResultListScrollListener {
         public ScrollListener(LinearLayoutManager layoutManager) {
             super(layoutManager);
@@ -37,7 +37,6 @@ public class SearchFragment extends Fragment implements Search.View {
         }
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
@@ -54,6 +53,26 @@ public class SearchFragment extends Fragment implements Search.View {
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+
+        // Adding selected track to QueueList
+        mAdapter = new SearchResultsAdapter(this.getContext(),new SearchResultsAdapter.ItemSelectedListener(){
+            @Override
+            public void onItemSelected(View itemView, Track item) {
+                // Getting information of queue fragment
+                String QueueFragmentTab = ((MainActivity)getActivity()).getTabFragment();
+                QueueFragment queueFragment = (QueueFragment)getActivity()
+                        .getSupportFragmentManager()
+                        .findFragmentByTag(QueueFragmentTab);
+                String artist = "";
+
+                for (ArtistSimple i : item.artists) {
+                    artist = i.name;
+                }
+                queueFragment.addToQueueList(item.id, item.name, artist);
+                // Just some user input indicator
+                Toast.makeText(getContext(), item.name+" added to queue!", Toast.LENGTH_SHORT).show();
             }
         });
 

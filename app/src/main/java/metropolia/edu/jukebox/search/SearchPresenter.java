@@ -77,7 +77,7 @@ public class SearchPresenter implements Search.ActionListener {
 
     @Override
     public void selectTrack(Track item) {
-
+        Toast.makeText(mContext, ""+item.name,Toast.LENGTH_SHORT).show();
     }
 
     @Override

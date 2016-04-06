@@ -11,6 +11,7 @@ import metropolia.edu.jukebox.search.SearchFragment;
 public class MainActivity extends AppCompatActivity {
 
     public static String TOKEN;
+    private String QueueFragmentTAG = "QueueFragment TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +32,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new QueueFragment(), "Queue");
+        adapter.addFrag(new QueueFragment(), "QueueList");
         adapter.addFrag(new SearchFragment(), "Search");
         adapter.addFrag(new SettingsFragment(), "Settings");
         viewPager.setAdapter(adapter);
+    }
+
+    public void setTabFragment(String tag){
+        QueueFragmentTAG = tag;
+    }
+
+    public String getTabFragment(){
+        return QueueFragmentTAG;
     }
 }
