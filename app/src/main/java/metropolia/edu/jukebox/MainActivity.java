@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new QueueFragment(), "QueueList");
-        adapter.addFrag(new SearchFragment(), "Search");
-        adapter.addFrag(new SettingsFragment(), "Settings");
+        adapter.addFrag(new QueueFragment(), getString(R.string.queue));
+        adapter.addFrag(new SearchFragment(), getString(R.string.search));
+        adapter.addFrag(new SettingsFragment(), getString(R.string.settings));
         viewPager.setAdapter(adapter);
     }
 

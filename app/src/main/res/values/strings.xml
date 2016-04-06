@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Jukebox</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="login_button">Login to Spotify</string>
+    <string name="join_party">Join Party</string>
+    <string name="search">Search</string>
+    <string name="queue">QueueList</string>
+    <string name="settings">Settings</string>
 </resources>

@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
-        android:queryHint="Search"/>
+        android:queryHint="@string/search"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
