@@ -10,14 +10,14 @@
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
     android:onClick="onLoginButtonClicked"
-    android:text="Login to Spotify"/>
+    android:text="@string/login_button"/>
 
     <Button
         android:id="@+id/button_join"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:onClick="onJoinButtonClicked"
-        android:text="Join to party"
+        android:text="@string/join_party"
         android:layout_above="@+id/button_login"
         android:layout_alignStart="@+id/button_login" />
 </RelativeLayout>
