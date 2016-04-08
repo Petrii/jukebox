@@ -3,6 +3,7 @@ package metropolia.edu.jukebox.queue;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Track implements Parcelable{
     private String track_id;
     private String track_name;
     private String track_artist;
+    private String track_image;
     private List<Vote> vote = new ArrayList<>();
 
     public static final Creator<Track> CREATOR = new Creator() {
@@ -52,11 +54,13 @@ public class Track implements Parcelable{
      * @param id
      * @param name
      * @param artist
+     * @param image
      */
-    public Track(String id, String name, String artist){
+    public Track(String id, String name, String artist, String image){
         this.track_id = id;
         this.track_name = name;
         this.track_artist = artist;
+        this.track_image = image;
     }
 
     /**
@@ -111,5 +115,12 @@ public class Track implements Parcelable{
         return vote;
     }
 
-
+    /**
+     * Get track image
+     *
+     * @return ImageView
+     */
+    public String getTrack_image() {
+        return track_image;
+    }
 }

@@ -3,6 +3,7 @@ package metropolia.edu.jukebox.queue;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +56,9 @@ public class QueueList implements Parcelable{
      * @param id
      * @param name
      * @param artist
+     * @param image
      */
-    public static void addToQueue(String id, String name, String artist) {
+    public static void addToQueue(String id, String name, String artist, String image) {
         boolean trackIsListed = false;
         for( Track item : queueList) {
             if (item.getId() == id) {
@@ -66,7 +68,7 @@ public class QueueList implements Parcelable{
                 Log.d(TAG, "Track is already in list");
             }
         }
-        if(!trackIsListed) queueList.add(new Track(id, name, artist));
+        if(!trackIsListed) queueList.add(new Track(id, name, artist, image));
 
     }
 

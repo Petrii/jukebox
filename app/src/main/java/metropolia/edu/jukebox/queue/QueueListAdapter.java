@@ -73,7 +73,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         notifyDataSetChanged();
     }
 
-    public void addNewTrack(String id, String name, String artist){
+    public void addNewTrack(String id, String name, String artist, String image){
         boolean trackIsListed = false;
         for( Track item : mItems) {
             if (item.getId() == id) {
@@ -83,7 +83,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
                 Log.d(TAG, "Track is already in list");
             }
         }
-        if(!trackIsListed)mItems.add(new Track(id, name, artist));
+        if(!trackIsListed)mItems.add(new Track(id, name, artist, image));
     }
 
     @Override
@@ -98,10 +98,9 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         holder.title.setText(item.getName());
         holder.subtitle.setText(item.getArtist());
 
-        /*Image image = item.album.images.get(0);
-        if (image != null) {
-            Picasso.with(mContext).load(image.url).into(holder.image);
-        }*/
+        Picasso.with(mContext).load(item.getTrack_image()).into(holder.image);
+
+
     }
 
     @Override

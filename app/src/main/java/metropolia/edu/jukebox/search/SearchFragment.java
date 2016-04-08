@@ -68,9 +68,10 @@ public class SearchFragment extends Fragment implements Search.View {
                 String artist = "";
 
                 for (ArtistSimple i : item.artists) {
+                    // Takes only the last artist?
                     artist = i.name;
                 }
-                queueFragment.addToQueueList(item.id, item.name, artist);
+                queueFragment.addToQueueList(item.id, item.name, artist, item.album.images.get(0).url);
                 // Just some user input indicator
                 Toast.makeText(getContext(), item.name+" added to queue!", Toast.LENGTH_SHORT).show();
             }

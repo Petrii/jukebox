@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -79,10 +80,11 @@ public class QueueFragment extends Fragment {
      * @param id
      * @param name
      * @param artist
+     * @param image
      */
-    public void addToQueueList(String id, String name, String artist){
-        QueueList.addToQueue(id, name, artist);
-        mAdapter.addNewTrack(id, name, artist);
+    public void addToQueueList(String id, String name, String artist, String image){
+        QueueList.addToQueue(id, name, artist, image);
+        mAdapter.addNewTrack(id, name, artist, image);
         mAdapter.notifyDataSetChanged();
     }
 
