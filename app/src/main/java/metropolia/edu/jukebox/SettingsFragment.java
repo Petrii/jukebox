@@ -54,6 +54,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        mStatusView = (TextView) view.findViewById(R.id.status);
         Button discover = (Button) view.findViewById(R.id.clickDiscover);
         discover.setOnClickListener(this);
         Button advertise = (Button) view.findViewById(R.id.clickAdvertise);
@@ -106,11 +107,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements View.O
 
     public TextView getmStatusView() {
         return mStatusView;
-    }
-
-    public void clickAdvertise(View v) {
-        // Register service
-
     }
 
     public void addChatLine(String line) {
