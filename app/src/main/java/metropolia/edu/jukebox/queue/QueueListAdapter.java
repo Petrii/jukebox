@@ -95,15 +95,8 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Track item = mItems.get(position);
-
         holder.title.setText(item.getName());
-
-        List<String> names = new ArrayList<>();
-        for (Track i : mItems) {
-            names.add(i.getArtist());
-        }
-        Joiner joiner = Joiner.on(", ");
-        holder.subtitle.setText(joiner.join(names));
+        holder.subtitle.setText(item.getArtist());
 
         /*Image image = item.album.images.get(0);
         if (image != null) {
