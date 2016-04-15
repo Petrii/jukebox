@@ -15,6 +15,7 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Image;
 import metropolia.edu.jukebox.MainActivity;
+import metropolia.edu.jukebox.Playback;
 import metropolia.edu.jukebox.R;
 import metropolia.edu.jukebox.search.ResultListScrollListener;
 
@@ -60,6 +61,7 @@ public class QueueFragment extends Fragment {
             public void onItemSelected(View itemView, Track item) {;
             }
         });
+
     }
 
     private class ScrollListener extends ResultListScrollListener {

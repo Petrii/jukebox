@@ -18,6 +18,7 @@ import java.util.List;
 
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
+import metropolia.edu.jukebox.Playback;
 import metropolia.edu.jukebox.R;
 import metropolia.edu.jukebox.search.SearchResultsAdapter;
 
@@ -83,7 +84,9 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
                 Log.d(TAG, "Track is already in list");
             }
         }
-        if(!trackIsListed)mItems.add(new Track(id, name, artist, image));
+        if(!trackIsListed) {
+            mItems.add(new Track(id, name, artist, image));
+        }
     }
 
     @Override

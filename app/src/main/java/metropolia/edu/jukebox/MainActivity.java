@@ -5,13 +5,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.Spotify;
 import metropolia.edu.jukebox.queue.QueueFragment;
+import metropolia.edu.jukebox.queue.QueueList;
 import metropolia.edu.jukebox.search.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String TOKEN;
     private String QueueFragmentTAG = "QueueFragment TAG";
+    private Playback playback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TOKEN = CredentialsHandler.getToken(this);
+
+        //playback = new Playback(this);
+        //playback.playFirstInQueue(QueueList.getQueueList());
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
@@ -45,4 +52,11 @@ public class MainActivity extends AppCompatActivity {
     public String getTabFragment(){
         return QueueFragmentTAG;
     }
+
+    /*
+    @Override
+    protected void onDestroy() {
+        Spotify.destroyPlayer(this);
+        super.onDestroy();
+    }*/
 }

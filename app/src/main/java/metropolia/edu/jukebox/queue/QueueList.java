@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import metropolia.edu.jukebox.Playback;
+
 /**
  * Created by petri on 5.4.2016.
  */
@@ -69,7 +71,6 @@ public class QueueList implements Parcelable{
             }
         }
         if(!trackIsListed) queueList.add(new Track(id, name, artist, image));
-
     }
 
     /**
