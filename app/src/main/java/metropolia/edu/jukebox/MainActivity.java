@@ -21,13 +21,15 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private String QueueFragmentTAG = "";
     private Playback playback;
-
+    public Connection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TOKEN = CredentialsHandler.getToken(this);
+
+        connection = new Connection(this);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
@@ -39,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_white_48dp);
 
         playBackThread();
+    }
+
+    public void advertise() {
+        connection.advertise();
+    }
+
+    public void discover() {
+        connection.discover();
     }
 
     /**
@@ -86,6 +96,19 @@ public class MainActivity extends AppCompatActivity {
         return QueueFragmentTAG;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        connection.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        connection.disconnect();
+    }
 
     @Override
     protected void onDestroy() {

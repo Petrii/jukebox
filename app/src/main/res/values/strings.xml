@@ -15,4 +15,6 @@
     <string name="thumpsup">thumpsUp</string>
     <string name="empty_queuelist">Oh no!\n We don\'t have any songs to play!\n Go to the Search tab\n and\n add your favorite song to the queue list.</string>
     <string name="add_icon">add_icon</string>
+    <string name="service_id">metropolia.edu.jukebox</string>
+    <string name="google_app_id">jukebox-4219</string>
 </resources>
