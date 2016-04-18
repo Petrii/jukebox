@@ -5,38 +5,62 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/entity_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="Cover art"
-        android:layout_marginRight="8dp" />
-
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:weightSum="1">
 
-        <TextView
-            android:id="@+id/entity_title"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:ellipsize="marquee"
-            android:gravity="bottom"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <ImageView
+            android:id="@+id/entity_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Cover art"
+            android:layout_marginRight="8dp" />
 
-        <TextView
-            android:id="@+id/entity_subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:ellipsize="marquee"
-            android:gravity="top"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.97">
+
+            <TextView
+                android:id="@+id/entity_title"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="16sp"
+                android:textColor="#FFF"
+                android:gravity="fill_vertical" />
+
+            <TextView
+                android:id="@+id/entity_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:ellipsize="marquee"
+                android:gravity="top"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="12sp"
+                android:textColor="#FFF"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/ic_add_white_48dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/add_icon"
+            android:background="#00ffffff"
+            android:backgroundTint="#00ffffff" />
 
     </LinearLayout>
 

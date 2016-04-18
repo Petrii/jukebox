@@ -24,9 +24,6 @@ public class LoginActivity extends Activity {
 
         String token = CredentialsHandler.getToken(this);
 
-        AuthenticationClient.clearCookies(this);
-        token = null;
-
         // Check if logged in Spotify account
         if( token == null ){
             setContentView(R.layout.activity_login);

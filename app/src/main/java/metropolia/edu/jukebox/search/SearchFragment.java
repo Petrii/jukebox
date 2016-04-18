@@ -17,6 +17,7 @@ import kaaes.spotify.webapi.android.models.Track;
 import metropolia.edu.jukebox.MainActivity;
 import metropolia.edu.jukebox.R;
 import metropolia.edu.jukebox.queue.QueueFragment;
+import metropolia.edu.jukebox.queue.QueueList;
 
 
 public class SearchFragment extends Fragment implements Search.View {
@@ -26,6 +27,7 @@ public class SearchFragment extends Fragment implements Search.View {
     private ScrollListener mScrollListener = new ScrollListener(new LinearLayoutManager(this.getContext()));
     private SearchResultsAdapter mAdapter;
     private View view;
+    private QueueList queueList;
 
     private class ScrollListener extends ResultListScrollListener {
         public ScrollListener(LinearLayoutManager layoutManager) {
@@ -72,6 +74,7 @@ public class SearchFragment extends Fragment implements Search.View {
                     artist = i.name;
                 }
                 queueFragment.addToQueueList(item.id, item.name, artist, item.album.images.get(0).url);
+                //queueList.addToQueue(item.id, item.name, artist, item.album.images.get(0).url);
                 // Just some user input indicator
                 Toast.makeText(getContext(), item.name+" added to queue!", Toast.LENGTH_SHORT).show();
             }
@@ -91,6 +94,8 @@ public class SearchFragment extends Fragment implements Search.View {
         super.onCreate(savedInstanceState);
 
         String accessToken = MainActivity.TOKEN;
+
+        queueList = QueueList.getInstance();
 
         mActionListener = new SearchPresenter(this.getContext(), this);
         mActionListener.init(accessToken);

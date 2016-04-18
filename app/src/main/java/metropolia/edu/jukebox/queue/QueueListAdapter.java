@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import com.google.common.base.Joiner;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.ArtistSimple;
@@ -28,16 +31,18 @@ import metropolia.edu.jukebox.search.SearchResultsAdapter;
  */
 public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolder>{
     private static final String TAG = "QueueListAdapter";
-    private final List<Track> mItems = new ArrayList<>();
+    //private final List<Track> mItems = new ArrayList<>();
     private final Context mContext;
-    private final ItemSelectedListener mListener;
+    private String UserID = "Jukebox User"; //Default user
+    QueueList queueList;
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView title;
         public final TextView subtitle;
         public final TextView votes;
         public final ImageView image;
+        public final ImageButton upVote, downVote;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -45,48 +50,40 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
             subtitle = (TextView) itemView.findViewById(R.id.entity_subtitle);
             image = (ImageView) itemView.findViewById(R.id.entity_image);
             votes = (TextView) itemView.findViewById(R.id.entity_votes);
-            itemView.setOnClickListener(this);
+            upVote = (ImageButton) itemView.findViewById(R.id.vote_up);
+            downVote = (ImageButton) itemView.findViewById(R.id.vote_down);
+            upVote.setOnClickListener(mOnVoteUp);
+            downVote.setOnClickListener(mOnVoteDown);
         }
 
-        @Override
-        public void onClick(View v) {
-            notifyItemChanged(getLayoutPosition());
-            mListener.onItemSelected(v, mItems.get(getAdapterPosition()));
-        }
-    }
-
-    public interface ItemSelectedListener {
-        void onItemSelected(View itemView, Track item);
-    }
-
-    public QueueListAdapter(Context context, ItemSelectedListener listener){
-        mContext = context;
-        mListener = listener;
-    }
-
-    public void clearData() {
-        if(!mItems.isEmpty())
-            mItems.clear();
-    }
-
-    public void addData(List<Track> items) {
-        mItems.addAll(items);
-        notifyDataSetChanged();
-    }
-
-    public void addNewTrack(String id, String name, String artist, String image){
-        boolean trackIsListed = false;
-        for( Track item : mItems) {
-            if (item.getId() == id) {
-                trackIsListed = true;
-                break;
-            } else {
-                Log.d(TAG, "Track is already in list");
+        /**
+         * Thumps ups button
+         */
+        private View.OnClickListener mOnVoteUp = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int position = getLayoutPosition();
+                queueList.updateVote(position, UserID, true);
+                notifyDataSetChanged();
             }
-        }
-        if(!trackIsListed) {
-            mItems.add(new Track(id, name, artist, image));
-        }
+        };
+
+        /**
+         * Thumps down button
+         */
+        private View.OnClickListener mOnVoteDown = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int position = getLayoutPosition();
+                queueList.updateVote(position, UserID, false);
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    public QueueListAdapter(Context context){
+        mContext = context;
+        queueList = QueueList.getInstance();
     }
 
     @Override
@@ -97,18 +94,16 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Track item = mItems.get(position);
+        Track item = queueList.getQueueList().get(position);
         holder.title.setText(item.getName());
         holder.subtitle.setText(item.getArtist());
-
+        holder.votes.setText(""+item.getVotes());
         Picasso.with(mContext).load(item.getTrack_image()).into(holder.image);
-
-
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return queueList.getQueueList().size();
     }
 }
 

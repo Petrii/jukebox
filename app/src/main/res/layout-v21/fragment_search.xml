@@ -20,6 +20,7 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/search_results" />
+        android:id="@+id/search_results"
+        tools:listitem="@android:layout/simple_list_item_2" />
 
 </LinearLayout>

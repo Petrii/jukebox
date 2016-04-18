@@ -109,10 +109,18 @@ public class Track implements Parcelable{
     /**
      * Get track votes
      *
-     * @return List<Votes>
+     * @return int
      */
-    public List<Vote> getVotes(){
-        return vote;
+    public int getVotes(){
+        int votes = 0;
+        for(Vote item : vote){
+            if(item.getVote()){
+                votes++;
+            }else{
+                votes--;
+            }
+        }
+        return votes;
     }
 
     /**

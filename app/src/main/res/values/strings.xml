@@ -7,4 +7,12 @@
     <string name="queue">QueueList</string>
     <string name="settings">Settings</string>
     <string name="join_code">Jukebox join code</string>
+    <string name="track_name">Track Name</string>
+    <string name="artist_name">Artist name</string>
+    <string name="_4">+4</string>
+    <string name="cover_art">Cover art</string>
+    <string name="thumpsdown">thumpsDown</string>
+    <string name="thumpsup">thumpsUp</string>
+    <string name="empty_queuelist">Oh no!\n We don\'t have any songs to play!\n Go to the Search tab\n and\n add your favorite song to the queue list.</string>
+    <string name="add_icon">add_icon</string>
 </resources>

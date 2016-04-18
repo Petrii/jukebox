@@ -1,7 +1,8 @@
 package metropolia.edu.jukebox.queue;
 
-import android.content.Context;
+
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,11 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 
-import java.util.List;
-
-import kaaes.spotify.webapi.android.models.Image;
 import metropolia.edu.jukebox.MainActivity;
 import metropolia.edu.jukebox.Playback;
 import metropolia.edu.jukebox.R;
@@ -24,55 +22,36 @@ import metropolia.edu.jukebox.search.ResultListScrollListener;
  */
 public class QueueFragment extends Fragment {
 
-    private static final String LOG_TAG = "QueueFragment";
-    private ScrollListener mScrollListener = new ScrollListener(new LinearLayoutManager(this.getContext()));
+    private static final String TAG = "QueueFragment";
+    private static final String QUEUE_LIST_BUNDLE = "QueueList";
     private QueueListAdapter mAdapter;
     private View view;
+    private QueueList queueList;
+    private ProgressBar playingBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_queue, container, false);
-
         ((MainActivity)getActivity()).setTabFragment(getTag());
-
         RecyclerView resultsList = (RecyclerView) view.findViewById(R.id.queue_list);
         resultsList.setHasFixedSize(true);
         resultsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
         resultsList.setAdapter(mAdapter);
-        resultsList.addOnScrollListener(mScrollListener);
+        playingBar = (ProgressBar)view.findViewById(R.id.progressBar);
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAdapter.clearData();
-        mAdapter.addData(QueueList.getQueueList());
-        mAdapter.notifyDataSetChanged();
-        Log.d("onStart", "ok");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mAdapter = new QueueListAdapter(this.getContext(), new QueueListAdapter.ItemSelectedListener() {
-            @Override
-            public void onItemSelected(View itemView, Track item) {;
-            }
-        });
-
-    }
-
-    private class ScrollListener extends ResultListScrollListener {
-
-        public ScrollListener(LinearLayoutManager layoutManager) {
-            super(layoutManager);
+        if(savedInstanceState != null){
+            //QueueList q = QueueList.getInstance();
+            queueList = savedInstanceState.getParcelable(QUEUE_LIST_BUNDLE);
+            //QueueList.setList(savedInstanceState.getParcelable(QUEUE_LIST_BUNDLE));
+        }else{
+            queueList = QueueList.getInstance();
         }
-
-        @Override
-        public void onLoadMore() {
-        }
+        mAdapter = new QueueListAdapter(this.getContext());
     }
 
     /**
@@ -85,26 +64,58 @@ public class QueueFragment extends Fragment {
      * @param image
      */
     public void addToQueueList(String id, String name, String artist, String image){
-        QueueList.addToQueue(id, name, artist, image);
-        mAdapter.addNewTrack(id, name, artist, image);
+        queueList.addToQueue(id, name, artist, image);
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void updateListView(){
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public synchronized void initProgressBar(int trackLength){
+        playingBar.setVisibility(View.VISIBLE);
+        playingBar.setProgress(0);
+        playingBar.setMax(trackLength);
+    }
+
+    public synchronized void updateBar(int position){
+        playingBar.setProgress(position);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("onStart", "ok");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(LOG_TAG, "onPause");
+        Bundle b = new Bundle();
+        b.putParcelable(QUEUE_LIST_BUNDLE, queueList);
+        Log.d(TAG, "onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(LOG_TAG, "onStop");
+        Log.d(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(LOG_TAG, "onDestroyView");
+        Log.d(TAG, "onDestroyView");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }

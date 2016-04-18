@@ -1,68 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_marginBottom="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="1">
 
-    <ImageView
-        android:id="@+id/entity_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="Cover art"
-        android:layout_marginRight="8dp" />
-
     <LinearLayout
-        android:layout_width="204dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1.16">
-
-        <TextView
-            android:id="@+id/entity_title"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:ellipsize="marquee"
-            android:gravity="bottom"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Track Name" />
-
-        <TextView
-            android:id="@+id/entity_subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:ellipsize="marquee"
-            android:gravity="top"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Artist name" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="71dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/entity_votes"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/entity_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="@string/cover_art"
+            android:layout_margin="5dp" />
+
+        <LinearLayout
+            android:layout_width="155dp"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:gravity="top"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="+4"
-            android:textColor="#a3eb70"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            android:textSize="20dp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/entity_title"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/track_name"
+                android:textSize="16sp"
+                android:textColor="#FFF"
+                android:singleLine="false"
+                android:gravity="fill_vertical" />
+
+            <TextView
+                android:id="@+id/entity_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:ellipsize="marquee"
+                android:gravity="top"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/artist_name"
+                android:textSize="12sp"
+                android:textColor="#FFF" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/vote_up"
+                android:src="@drawable/ic_thumb_up_white_48dp"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/thumpsup"
+                android:background="#00ffffff"
+                android:layout_margin="10dp"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/vote_down"
+                android:src="@drawable/ic_thumb_down_white_48dp"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/thumpsdown"
+                android:background="#00ffffff"
+                android:layout_margin="10dp"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/entity_votes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="top"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#a3eb70"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:layout_margin="3dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#d9d9d9"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
 
 </LinearLayout>
