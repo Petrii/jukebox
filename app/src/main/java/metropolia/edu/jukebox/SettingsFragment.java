@@ -30,6 +30,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(MainActivity.isHost){
+            ((MainActivity) getActivity()).initializePlayBack();
+        }
     }
 
     @Override

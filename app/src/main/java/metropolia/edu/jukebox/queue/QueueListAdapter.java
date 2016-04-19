@@ -2,6 +2,7 @@ package metropolia.edu.jukebox.queue;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,10 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
     private static final String TAG = "QueueListAdapter";
     //private final List<Track> mItems = new ArrayList<>();
     private final Context mContext;
-    private String UserID = "Jukebox User"; //Default user
+    private final ItemSelectedListener mListener;
     QueueList queueList;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView title;
         public final TextView subtitle;
@@ -40,37 +41,32 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
             votes = (TextView) itemView.findViewById(R.id.entity_votes);
             upVote = (ImageButton) itemView.findViewById(R.id.vote_up);
             downVote = (ImageButton) itemView.findViewById(R.id.vote_down);
-            upVote.setOnClickListener(mOnVoteUp);
-            downVote.setOnClickListener(mOnVoteDown);
+            upVote.setOnClickListener(this);
+            downVote.setOnClickListener(this);
+
         }
 
-        /**
-         * Thumps ups button
-         */
-        private View.OnClickListener mOnVoteUp = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int position = getLayoutPosition();
-                queueList.updateVote(position, UserID, true);
-                notifyDataSetChanged();
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "Click");
+            switch(v.getId()){
+                case R.id.vote_down:
+                    break;
+                case R.id.vote_up:
+                    break;
             }
-        };
-
-        /**
-         * Thumps down button
-         */
-        private View.OnClickListener mOnVoteDown = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int position = getLayoutPosition();
-                queueList.updateVote(position, UserID, false);
-                notifyDataSetChanged();
-            }
-        };
+            notifyItemChanged(getLayoutPosition());
+            mListener.onItemSelected(v, queueList.getTrackList().get(getAdapterPosition()), v.getId());
+        }
     }
 
-    public QueueListAdapter(Context context){
+    public interface ItemSelectedListener {
+        void onItemSelected(View itemView, Track item, int buttonID);
+    }
+
+    public QueueListAdapter(Context context, ItemSelectedListener listener){
         mContext = context;
+        mListener = listener;
         queueList = QueueList.getInstance();
     }
 

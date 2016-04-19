@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import metropolia.edu.jukebox.MainActivity;
+
 /**
  * Created by petri on 5.4.2016.
  *
@@ -82,17 +84,27 @@ public final class QueueList implements Parcelable{
         for( Track item : trackList) {
             if (item.getId() == id) {
                 trackIsListed = true;
-                break;
             }
         }
         if(!trackIsListed){
             trackList.add(new Track(id, name, artist, image));
             Collections.sort(trackList, new OrderListByVotes());
+            MainActivity.updateUI = true;
         }
     }
 
     public void addTrack(Track track) {
-        trackList.add(track);
+        boolean trackIsListed = false;
+        for( Track item : trackList) {
+            if (item.getId() == track.getId()) {
+                trackIsListed = true;
+            }
+        }
+        if(!trackIsListed){
+            trackList.add(track);
+            Collections.sort(trackList, new OrderListByVotes());
+            MainActivity.updateUI = true;
+        }
     }
 
     /**
@@ -103,9 +115,16 @@ public final class QueueList implements Parcelable{
      * @param userId
      * @param vote
      */
-    public synchronized void updateVote(int position, String userId, Boolean vote) {
-        trackList.get(position).addVote(userId, vote);
-        Collections.sort(trackList, new OrderListByVotes());
+    public synchronized boolean updateVote(String trackID, String userId, Boolean vote) {
+        for( Track item : trackList) {
+            if (item.getId() == trackID) {
+                item.addVote(userId, vote);
+                Collections.sort(trackList, new OrderListByVotes());
+                MainActivity.updateUI = true;
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -113,6 +132,7 @@ public final class QueueList implements Parcelable{
      */
     public synchronized void deleteTrack(){
         trackList.remove(0);
+        MainActivity.updateUI = true;
     }
 
     public void clearData() {

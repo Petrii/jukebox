@@ -22,19 +22,14 @@ public final class Playback implements PlayerNotificationCallback,
     private static final String TAG = "Playback";
     private final Context context;
     private final Player player;
-    private final Handler handler;
     private final Config config;
     private boolean isPlay = false;
     private int duration = 1000; // Default time: 1 sek
-    private int progresBarTime = 0;
-    QueueFragment queueFragment;
     QueueList queueList;
 
-    public Playback(Context context, QueueFragment queueFragment ) {
+    public Playback(Context context ) {
         this.context = context;
-        this.queueFragment = queueFragment;
         this.queueList = QueueList.getInstance();
-        this.handler = new Handler(Looper.getMainLooper());
         this.config = new Config(this.context, MainActivity.TOKEN, LoginActivity.CLIENT_ID);
         this.player = Spotify.getPlayer(this.config, this, this);
     }
@@ -52,27 +47,8 @@ public final class Playback implements PlayerNotificationCallback,
                         queueList.deleteTrack();
                         Thread.sleep(500);
                         isPlay = true;
-                        // UI Thread
-                        handler.post(new Runnable(){
-                            @Override
-                            public void run() {
-                                //Log.d(TAG, queueFragment.toString());
-                                queueFragment.updateListView();
-                                queueFragment.initProgressBar((duration/100));
-                                queueFragment.updateBar(0);
-                            }
-                        });
-                        //Log.d(TAG, "QueueList Duration is set: "+duration);
                     }
                 }
-                /*progresBarTime++;
-                handler.post(new Runnable(){
-                    @Override
-                    public void run() {
-                        //Log.d(TAG, queueFragment.toString());
-                        queueFragment.updateBar(progresBarTime);
-                    }
-                });*/
             }
         }catch (InterruptedException e){
             e.printStackTrace();
@@ -94,9 +70,11 @@ public final class Playback implements PlayerNotificationCallback,
         Log.d(TAG, "Playback event received: " + eventType.name());
         switch(eventType.name()){
             case "TRACK_CHANGED":
+                Log.d(TAG, "TRACK_CHANGED");
                 duration = playerState.durationInMs;
                 break;
             case "TRACK_END":
+                Log.d(TAG, "TRACK_END");
                 isPlay = false;
                 break;
             case "PAUSE":

@@ -17,31 +17,30 @@ public class LoginActivity extends Activity {
     public static final String CLIENT_ID = "5edab87c1536471aab90d32d5c528875";
     private static final String REDIRECT_URI = "lbjukebox://callback";
     private static final int REQUEST_CODE = 1337;
+    private boolean hosting = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        String token = CredentialsHandler.getToken(this);
-
-        // Check if logged in Spotify account
-        if( token == null ){
-            setContentView(R.layout.activity_login);
-        }else{
-            startMainActivity();
-        }
+        setContentView(R.layout.activity_login);
     }
 
     public void onLoginButtonClicked(View v){
-        AuthenticationRequest.Builder builder =
-                new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
-        builder.setScopes(new String[]{"playlist-read"}); // Read your publicly available information
-        AuthenticationRequest request = builder.build();
+        String token = CredentialsHandler.getToken(this);
+        if( token == null ){
+            AuthenticationRequest.Builder builder =
+                    new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
+            builder.setScopes(new String[]{"playlist-read"}); // Read your publicly available information
+            AuthenticationRequest request = builder.build();
 
-        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+            AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+        }
+        hosting = true;
+        startMainActivity();
     }
 
     public void onJoinButtonClicked(View v){
+        hosting = false;
         startMainActivity();
     }
 
@@ -77,6 +76,7 @@ public class LoginActivity extends Activity {
     */
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("isHost", hosting);
         startActivity(intent);
         finish();
     }

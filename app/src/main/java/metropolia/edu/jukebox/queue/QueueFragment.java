@@ -51,7 +51,31 @@ public class QueueFragment extends Fragment {
         }else{
             queueList = QueueList.getInstance();
         }
-        mAdapter = new QueueListAdapter(this.getContext());
+        mAdapter = new QueueListAdapter(this.getContext(), new QueueListAdapter.ItemSelectedListener() {
+            @Override
+            public void onItemSelected(View itemView, final Track item, int buttonId) {
+                /**
+                 * Thumps ups button
+                 */
+                boolean isUpdated = false;
+                Log.d(TAG, "klik "+item.getArtist());
+                switch(buttonId){
+                    case R.id.vote_down:
+                        isUpdated = queueList.updateVote(item.getId(), "JUkka", false);
+                        break;
+                    case R.id.vote_up:
+                        isUpdated = queueList.updateVote(item.getId(), "JUkka", true);
+                        break;
+                }
+                if(isUpdated){
+                    if(MainActivity.isHost){
+                        ((MainActivity)getActivity()).connection.sendQueueListToClients();
+                    }else{
+                        ((MainActivity)getActivity()).connection.sendTrackToHost(item);
+                    }
+                }
+            }
+        });
     }
 
     /**

@@ -60,11 +60,6 @@ public class SearchFragment extends Fragment implements Search.View {
         mAdapter = new SearchResultsAdapter(this.getContext(),new SearchResultsAdapter.ItemSelectedListener(){
             @Override
             public void onItemSelected(View itemView, Track item) {
-                // Getting information of queue fragment
-                String QueueFragmentTab = ((MainActivity)getActivity()).getTabFragment();
-                QueueFragment queueFragment = (QueueFragment)getActivity()
-                        .getSupportFragmentManager()
-                        .findFragmentByTag(QueueFragmentTab);
                 String artist = "";
 
                 for (ArtistSimple i : item.artists) {
@@ -73,7 +68,7 @@ public class SearchFragment extends Fragment implements Search.View {
                 }
 
                 if (MainActivity.isHost) {
-                    queueFragment.addToQueueList(item.id, item.name, artist, item.album.images.get(0).url);
+                    queueList.addToQueue(item.id, item.name, artist, item.album.images.get(0).url);
                 } else {
                     ((MainActivity) getActivity()).connection.sendTrackToHost(
                             new metropolia.edu.jukebox.queue.Track(

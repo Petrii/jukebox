@@ -1,7 +1,9 @@
 package metropolia.edu.jukebox;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -23,14 +25,18 @@ public class MainActivity extends AppCompatActivity {
     private String QueueFragmentTAG = "";
     private Playback playback;
     public Connection connection;
+    private QueueFragment queueFragment;
+    public static boolean updateUI = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TOKEN = CredentialsHandler.getToken(this);
+        Intent intent = getIntent();
 
         connection = new Connection(this);
+        this.isHost = intent.getBooleanExtra("isHost", false);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
@@ -41,7 +47,59 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_search_white_48dp);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_white_48dp);
 
-        playBackThread();
+        intitializeFragentTag();
+    }
+
+    public void initializePlayBack(){
+        playback = new Playback(this);
+        new Thread(playback).start();
+    }
+
+    /**
+     * This wait QueueFragmentTAG and send it to Playback
+     * Playback use this fragment to update QueueList ListView
+     */
+    private void intitializeFragentTag(){
+        Runnable setup = new Runnable() {
+            @Override
+            public void run() {
+                while(QueueFragmentTAG.equals("")){
+                    // Wait loop. Is this correct way to ensure that QueueFragmentTAG is set
+                    // and then start player.
+                }
+                uiUpdateThread();
+            }
+        };
+        new Thread(setup).start();
+    }
+
+    private void uiUpdateThread() {
+        queueFragment = (QueueFragment)this
+                .getSupportFragmentManager()
+                .findFragmentByTag(QueueFragmentTAG);
+
+        new Thread(){
+            public void run(){
+                while(true){
+                    try {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable(){
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "uiUpdateThread handler");
+                                if(updateUI) {
+                                    Log.d(TAG, "Updating");
+                                    queueFragment.updateListView();
+                                    updateUI = false;
+                                }
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 
     public void advertise() {
@@ -52,41 +110,14 @@ public class MainActivity extends AppCompatActivity {
         connection.discover();
     }
 
-    /**
-     * This wait QueueFragmentTAG and send it to Playback
-     * Playback use this fragment to update QueueList ListView
-     */
-    private void playBackThread(){
-        Runnable setup = new Runnable() {
-            @Override
-            public void run() {
-                while(QueueFragmentTAG.equals("")){
-                    // Wait loop. Is this correct way to ensure that QueueFragmentTAG is set
-                    // and then start player.
-                }
-                startPlayback();
-            }
-        };
-        new Thread(setup).start();
-    }
-
-    /**
-     * Initialize playback thread
-     */
-    private void startPlayback(){
-        QueueFragment queueFragment = (QueueFragment)this
-                .getSupportFragmentManager()
-                .findFragmentByTag(QueueFragmentTAG);
-        playback = new Playback(this, queueFragment);
-        new Thread(playback).start();
-    }
-
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new QueueFragment(), getString(R.string.queue));
         adapter.addFrag(new SearchFragment(), getString(R.string.search));
         adapter.addFrag(new SettingsFragment(), getString(R.string.settings));
+
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(2);
     }
 
     public void setTabFragment(String tag){

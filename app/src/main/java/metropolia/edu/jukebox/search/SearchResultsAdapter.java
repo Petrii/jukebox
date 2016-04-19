@@ -2,6 +2,7 @@ package metropolia.edu.jukebox.search;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import kaaes.spotify.webapi.android.models.Track;
 import metropolia.edu.jukebox.R;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ViewHolder> {
-
+    private static final String TAG = "SearchResultsAdapter";
     private final List<Track> mItems = new ArrayList<>();
     private final Context mContext;
     private final ItemSelectedListener mListener;
