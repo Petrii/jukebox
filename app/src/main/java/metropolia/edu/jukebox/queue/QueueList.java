@@ -2,14 +2,10 @@ package metropolia.edu.jukebox.queue;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import metropolia.edu.jukebox.Playback;
 
 /**
  * Created by petri on 5.4.2016.
@@ -20,7 +16,7 @@ import metropolia.edu.jukebox.Playback;
 public final class QueueList implements Parcelable{
     private static volatile QueueList instance;
     private static final String TAG = "QueueList";
-    private static List<Track> queueList  = new ArrayList<>();
+    private static List<Track> trackList = new ArrayList<>();
 
     public static final Creator<QueueList> CREATOR = new Creator(){
         public QueueList createFromParcel(Parcel source){
@@ -38,9 +34,7 @@ public final class QueueList implements Parcelable{
     public static QueueList getInstance(){
         if(instance == null){
             synchronized (QueueList.class){
-                if(instance == null){
-                    instance = new QueueList();
-                }
+                instance = new QueueList();
             }
         }
         return instance;
@@ -53,28 +47,25 @@ public final class QueueList implements Parcelable{
     private QueueList(){ }
 
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(this.queueList);
+        dest.writeTypedList(this.trackList);
     }
 
     public QueueList(Parcel in){
-        this.queueList = in.createTypedArrayList(Track.CREATOR);
+        this.trackList = in.createTypedArrayList(Track.CREATOR);
     }
 
     /**
-     * Returns QueueList object's queueList List<Track>
+     * Returns QueueList object's trackList List<Track>
      * list of tracks
      *
      * @return List<Track>
      */
-    public synchronized List<Track> getQueueList(){
-        if(!queueList.isEmpty()){
-            Log.d("QueueList", "getQueueList() "+queueList.get(0).getName());
-        }
-        return queueList;
+    public synchronized List<Track> getTrackList(){
+        return trackList;
     }
 
     public void setList(List<Track> tracks){
-        queueList = tracks;
+        trackList = tracks;
     }
 
     /**
@@ -88,16 +79,20 @@ public final class QueueList implements Parcelable{
      */
     public synchronized void addToQueue(String id, String name, String artist, String image) {
         boolean trackIsListed = false;
-        for( Track item : queueList) {
+        for( Track item : trackList) {
             if (item.getId() == id) {
                 trackIsListed = true;
                 break;
             }
         }
         if(!trackIsListed){
-            queueList.add(new Track(id, name, artist, image));
-            Collections.sort(queueList, new OrderListByVotes());
+            trackList.add(new Track(id, name, artist, image));
+            Collections.sort(trackList, new OrderListByVotes());
         }
+    }
+
+    public void addTrack(Track track) {
+        trackList.add(track);
     }
 
     /**
@@ -109,19 +104,19 @@ public final class QueueList implements Parcelable{
      * @param vote
      */
     public synchronized void updateVote(int position, String userId, Boolean vote) {
-        queueList.get(position).addVote(userId, vote);
-        Collections.sort(queueList, new OrderListByVotes());
+        trackList.get(position).addVote(userId, vote);
+        Collections.sort(trackList, new OrderListByVotes());
     }
 
     /**
      *  Remove now playing track from queue list
      */
     public synchronized void deleteTrack(){
-        queueList.remove(0);
+        trackList.remove(0);
     }
 
     public void clearData() {
-        if(!queueList.isEmpty())
-            queueList.clear();
+        if(!trackList.isEmpty())
+            trackList.clear();
     }
 }

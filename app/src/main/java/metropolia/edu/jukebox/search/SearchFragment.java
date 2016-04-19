@@ -9,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import java.util.List;
-
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 import metropolia.edu.jukebox.MainActivity;
@@ -73,8 +71,18 @@ public class SearchFragment extends Fragment implements Search.View {
                     // Takes only the last artist?
                     artist = i.name;
                 }
-                queueFragment.addToQueueList(item.id, item.name, artist, item.album.images.get(0).url);
-                //queueList.addToQueue(item.id, item.name, artist, item.album.images.get(0).url);
+
+                if (MainActivity.isHost) {
+                    queueFragment.addToQueueList(item.id, item.name, artist, item.album.images.get(0).url);
+                } else {
+                    ((MainActivity) getActivity()).connection.sendTrackToHost(
+                            new metropolia.edu.jukebox.queue.Track(
+                                    item.id,
+                                    item.name,
+                                    artist,
+                                    item.album.images.get(0).url));
+                }
+
                 // Just some user input indicator
                 Toast.makeText(getContext(), item.name+" added to queue!", Toast.LENGTH_SHORT).show();
             }

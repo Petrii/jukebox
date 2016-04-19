@@ -17,9 +17,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.nearby.Nearby;
+
+import metropolia.edu.jukebox.queue.QueueList;
+
 public class SettingsFragment extends PreferenceFragmentCompat implements View.OnClickListener {
     private Button hostButton;
     private Button clientButton;
+
     public static final String TAG = "Settings";
 
     @Override
@@ -54,6 +59,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements View.O
                 break;
             case R.id.clientButton:
                 ((MainActivity)getActivity()).discover();
+                break;
+            case R.id.clickSend:
+
                 break;
         }
     }

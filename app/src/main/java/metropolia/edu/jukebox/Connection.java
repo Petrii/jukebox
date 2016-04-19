@@ -19,6 +19,11 @@ import com.google.android.gms.nearby.connection.Connections;
 import java.util.ArrayList;
 import java.util.List;
 
+import metropolia.edu.jukebox.queue.ParcelableUtil;
+import metropolia.edu.jukebox.queue.QueueFragment;
+import metropolia.edu.jukebox.queue.QueueList;
+import metropolia.edu.jukebox.queue.Track;
+
 public class Connection implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -29,10 +34,11 @@ public class Connection implements
     private String TAG = "ConnectionTAG";
     private Context context;
     private final GoogleApiClient googleApiClient;
-    private boolean isHost = false;
     private boolean isConnected;
     private String remoteHostEndpoint;
     private List<String> remotePeerEndpoints = new ArrayList<>();
+    private QueueList queueList;
+    private ParcelableUtil parcelableUtil;
 
     public Connection(Context context) {
         this.context = context;
@@ -42,6 +48,21 @@ public class Connection implements
                 .addOnConnectionFailedListener(this)
                 .addApi(Nearby.CONNECTIONS_API)
                 .build();
+
+        queueList = QueueList.getInstance();
+        parcelableUtil = new ParcelableUtil();
+    }
+
+    public void sendQueueListToClients() {
+        byte[] payload = parcelableUtil.marshall(queueList);
+
+        Nearby.Connections.sendReliableMessage(googleApiClient, remotePeerEndpoints, payload);
+    }
+
+    public void sendTrackToHost(Track track) {
+        byte[] payload = parcelableUtil.marshall(track);
+
+        Nearby.Connections.sendReliableMessage(googleApiClient, remoteHostEndpoint, payload);
     }
 
     public void discover() {
@@ -49,7 +70,7 @@ public class Connection implements
             return;
         }
 
-        isHost = false;
+        MainActivity.isHost = false;
         String serviceId = context.getString(R.string.service_id);
         long CONNECTION_TIME_OUT = 10000L;
 
@@ -84,7 +105,7 @@ public class Connection implements
                         Nearby.Connections.stopDiscovery(googleApiClient, serviceId);
                         remoteHostEndpoint = endpointId;
 
-                        if (!isHost) {
+                        if (!MainActivity.isHost) {
                             isConnected = true;
                         }
                     } else {
@@ -92,7 +113,7 @@ public class Connection implements
                         Log.d(TAG, "Status code: "+ status.getStatus().getStatusCode());
                         Log.d(TAG, "Device Id: "+ deviceId);
 
-                        if (!isHost) {
+                        if (!MainActivity.isHost) {
                             isConnected = false;
                         }
                     }
@@ -111,8 +132,8 @@ public class Connection implements
 
         Log.d(TAG, "Trying to advertise.");
 
-        isHost = true;
-        long CONNECTION_TIME_OUT = 10000L;
+        MainActivity.isHost = true;
+        long CONNECTION_TIME_OUT = 0L;
 
         List<AppIdentifier> appIdentifierList = new ArrayList<>();
         appIdentifierList.add(new AppIdentifier(context.getPackageName()));
@@ -135,7 +156,7 @@ public class Connection implements
                                     final String remoteDeviceId,
                                     final String remoteEndpointName,
                                     byte[] payload) {
-        if (isHost) {
+        if (MainActivity.isHost) {
             byte[] myPayload = null;
             Nearby.Connections.acceptConnectionRequest(googleApiClient, remoteEndpointId, myPayload, this).setResultCallback(new ResultCallback<Status>() {
                 @Override
@@ -146,6 +167,9 @@ public class Connection implements
                         if (!remotePeerEndpoints.contains(remoteEndpointId)) {
                             remotePeerEndpoints.add(remoteEndpointId);
                         }
+
+                        sendQueueListToClients();
+
                     } else {
                         Log.d(TAG, "Failed connecting to: "+ remoteEndpointName);
                     }
@@ -169,8 +193,10 @@ public class Connection implements
     }
 
     public void connect() {
-        Log.d(TAG, "Connecting GoogleApiClient.");
-        googleApiClient.connect();
+        if(!googleApiClient.isConnected()) {
+            Log.d(TAG, "Connecting GoogleApiClient.");
+            googleApiClient.connect();
+        }
     }
 
     public void disconnect() {
@@ -184,11 +210,11 @@ public class Connection implements
             googleApiClient.disconnect();
         }*/
 
-        if (isHost) {
+        if (MainActivity.isHost) {
             Log.d(TAG, "Disconnecting host.");
             Nearby.Connections.stopAdvertising(googleApiClient);
             Nearby.Connections.stopAllEndpoints(googleApiClient);
-            isHost = false;
+            MainActivity.isHost = false;
             remotePeerEndpoints.clear();
         } else {
             Log.d(TAG, "Disconnecting client.");
@@ -221,6 +247,14 @@ public class Connection implements
     @Override
     public void onMessageReceived(String s, byte[] bytes, boolean b) {
         Log.d(TAG, "onMessageReceived");
+
+        if (MainActivity.isHost) {
+            queueList.addTrack(new Track(parcelableUtil.unmarshall(bytes)));
+
+            sendQueueListToClients();
+        } else {
+            new QueueList(parcelableUtil.unmarshall(bytes));
+        }
     }
 
     @Override

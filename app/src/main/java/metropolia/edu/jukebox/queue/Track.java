@@ -38,13 +38,15 @@ public class Track implements Parcelable{
         dest.writeString(this.track_id);
         dest.writeString(this.track_name);
         dest.writeString(this.track_artist);
+        dest.writeString(this.track_image);
         dest.writeTypedList(this.vote);
     }
 
-    protected Track(Parcel in){
+    public Track(Parcel in){
         this.track_id = in.readString();
         this.track_name = in.readString();
         this.track_artist = in.readString();
+        this.track_image = in.readString();
         this.vote = in.createTypedArrayList(Vote.CREATOR);
     }
 

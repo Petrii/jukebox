@@ -2,28 +2,16 @@ package metropolia.edu.jukebox.queue;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.common.base.Joiner;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import kaaes.spotify.webapi.android.models.ArtistSimple;
-import kaaes.spotify.webapi.android.models.Image;
-import metropolia.edu.jukebox.Playback;
 import metropolia.edu.jukebox.R;
-import metropolia.edu.jukebox.search.SearchResultsAdapter;
 
 
 /**
@@ -94,7 +82,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Track item = queueList.getQueueList().get(position);
+        Track item = queueList.getTrackList().get(position);
         holder.title.setText(item.getName());
         holder.subtitle.setText(item.getArtist());
         holder.votes.setText(""+item.getVotes());
@@ -103,7 +91,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
     @Override
     public int getItemCount() {
-        return queueList.getQueueList().size();
+        return queueList.getTrackList().size();
     }
 }
 

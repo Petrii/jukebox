@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String TOKEN;
     private static final String TAG = "MainActivity";
+    public static boolean isHost = false;
     private String QueueFragmentTAG = "";
     private Playback playback;
     public Connection connection;
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        connection.disconnect();
+        //connection.disconnect();
     }
 
     @Override
