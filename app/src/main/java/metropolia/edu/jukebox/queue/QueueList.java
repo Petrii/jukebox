@@ -2,6 +2,7 @@ package metropolia.edu.jukebox.queue;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -101,10 +102,12 @@ public final class QueueList implements Parcelable{
                     Collections.sort(trackList, new OrderListByVotes());
                     MainActivity.updateUI = true;
                     return true;*/
+                Log.d(TAG, "Track is listed");
                 trackIsListed = true;
             }
         }
         if(!trackIsListed){
+            Log.d(TAG, "Track is not listed");
             trackList.add(track);
             Collections.sort(trackList, new OrderListByVotes());
             MainActivity.updateUI = true;

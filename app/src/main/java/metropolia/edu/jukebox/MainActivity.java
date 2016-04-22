@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.connection = new Connection(this);
         this.isHost = intent.getBooleanExtra("isHost", false);
-
+        Log.d(TAG, "HOST: "+isHost);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
 
@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_share_white_48dp);
 
         intitializeFragentTag();
-    }
 
-    public void initializePlayBack(){
-        this.playback = new Playback(this);
-        new Thread(playback).start();
+        if(isHost){
+            this.playback = new Playback(this);
+            new Thread(playback).start();
+        }
     }
 
     /**

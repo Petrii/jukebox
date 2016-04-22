@@ -233,6 +233,11 @@ public class Connection implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
+        if(MainActivity.isHost){
+            advertise();
+        }else{
+            discover();
+        }
     }
 
     @Override

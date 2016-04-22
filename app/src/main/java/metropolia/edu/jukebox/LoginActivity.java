@@ -34,6 +34,9 @@ public class LoginActivity extends Activity {
             builder.setScopes(new String[]{"playlist-read"}); // Read your publicly available information
             final AuthenticationRequest request = builder.build();
             AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+        }else{
+            hosting = true;
+            startMainActivity();
         }
     }
 
