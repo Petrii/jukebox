@@ -15,6 +15,7 @@ import metropolia.edu.jukebox.search.SearchFragment;
 public class MainActivity extends AppCompatActivity {
 
     public static String TOKEN;
+    public static String UserID = "JukeBox";
     public static boolean isHost = false;
     public static boolean updateUI = false;
     private static final String TAG = "MainActivity";

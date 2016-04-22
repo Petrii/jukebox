@@ -61,10 +61,10 @@ public class QueueFragment extends Fragment {
                 Log.d(TAG, "klik "+item.getArtist());
                 switch(buttonId){
                     case R.id.vote_down:
-                        isUpdated = queueList.updateVote(item.getId(), "JUkka", false);
+                        isUpdated = queueList.updateVote(item.getId(), MainActivity.UserID, false);
                         break;
                     case R.id.vote_up:
-                        isUpdated = queueList.updateVote(item.getId(), "JUkka", true);
+                        isUpdated = queueList.updateVote(item.getId(), MainActivity.UserID, true);
                         break;
                 }
                 if(isUpdated){

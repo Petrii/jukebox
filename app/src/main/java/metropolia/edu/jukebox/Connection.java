@@ -163,7 +163,9 @@ public class Connection implements
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, "New client connected: "+ remoteEndpointName);
+                        Log.d(TAG, "New client connected remoteEndpointName: "+ remoteEndpointName);
+                        Log.d(TAG, "New client connected remoteDeviceId: "+ remoteDeviceId);
+                        Log.d(TAG, "New client connected remoteEndpointId: "+ remoteEndpointId);
 
                         if (!remotePeerEndpoints.contains(remoteEndpointId)) {
                             remotePeerEndpoints.add(remoteEndpointId);
@@ -233,6 +235,7 @@ public class Connection implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
+        MainActivity.UserID = Nearby.Connections.getLocalEndpointId(googleApiClient);
         if(MainActivity.isHost){
             advertise();
         }else{
@@ -256,11 +259,11 @@ public class Connection implements
 
         if (MainActivity.isHost) {
             queueList.updateQueueList(new Track(parcelableUtil.unmarshall(bytes)));
-
             sendQueueListToClients();
         } else {
             new QueueList(parcelableUtil.unmarshall(bytes));
         }
+        MainActivity.updateUI = true;
     }
 
     @Override

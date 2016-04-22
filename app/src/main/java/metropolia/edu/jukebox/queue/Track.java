@@ -105,6 +105,10 @@ public class Track implements Parcelable{
         return track_artist;
     }
 
+    public List<Vote> getVoteList(){
+        return vote;
+    }
+
     /**
      * Get track votes
      *

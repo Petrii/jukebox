@@ -94,14 +94,21 @@ public final class QueueList implements Parcelable{
         }
     }
 
+
     public synchronized void updateQueueList(Track track) {
         boolean trackIsListed = false;
         for( Track item : trackList) {
-            if (item.getId() == track.getId()) {
-                    /*item.addVote(track, vote);
-                    Collections.sort(trackList, new OrderListByVotes());
-                    MainActivity.updateUI = true;
-                    return true;*/
+            Log.d(TAG, item.getId()+" =" +track.getId());
+            if (item.getId().equals(track.getId())) {
+                for(Vote voteItem : item.getVoteList()){
+                    for( Vote voteItemTrack : track.getVoteList()){
+                        if( voteItem.getUserID().equals(voteItemTrack.getUserID())){
+                            item.addVote(voteItemTrack.getUserID(), voteItemTrack.getVote());
+                            Collections.sort(trackList, new OrderListByVotes());
+                            MainActivity.updateUI = true;
+                        }
+                    }
+                }
                 Log.d(TAG, "Track is listed");
                 trackIsListed = true;
             }
@@ -123,7 +130,7 @@ public final class QueueList implements Parcelable{
      */
     public synchronized boolean updateVote(String trackID, String userId, Boolean vote) {
         for( Track item : trackList) {
-            if (item.getId() == trackID) {
+            if (item.getId().equals(trackID)) {
                 item.addVote(userId, vote);
                 Collections.sort(trackList, new OrderListByVotes());
                 MainActivity.updateUI = true;
