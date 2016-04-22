@@ -2,15 +2,10 @@ package metropolia.edu.jukebox;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
 
 import com.spotify.sdk.android.player.Spotify;
 
@@ -20,13 +15,15 @@ import metropolia.edu.jukebox.search.SearchFragment;
 public class MainActivity extends AppCompatActivity {
 
     public static String TOKEN;
-    private static final String TAG = "MainActivity";
     public static boolean isHost = false;
+    public static boolean updateUI = false;
+    private static final String TAG = "MainActivity";
+
+    public Connection connection;
     private String QueueFragmentTAG = "";
     private Playback playback;
-    public Connection connection;
     private QueueFragment queueFragment;
-    public static boolean updateUI = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +32,13 @@ public class MainActivity extends AppCompatActivity {
         TOKEN = CredentialsHandler.getToken(this);
         Intent intent = getIntent();
 
-        connection = new Connection(this);
+        this.connection = new Connection(this);
         this.isHost = intent.getBooleanExtra("isHost", false);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_queue_music_white_48dp);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_search_white_48dp);
@@ -51,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initializePlayBack(){
-        playback = new Playback(this);
+        this.playback = new Playback(this);
         new Thread(playback).start();
     }
 
@@ -86,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable(){
                             @Override
                             public void run() {
-                                Log.d(TAG, "uiUpdateThread handler");
-                                if(updateUI) {
-                                    Log.d(TAG, "Updating");
-                                    queueFragment.updateListView();
-                                    updateUI = false;
-                                }
+                            Log.d(TAG, "uiUpdateThread handler");
+                            if(updateUI) {
+                                Log.d(TAG, "Updating");
+                                queueFragment.updateListView();
+                                updateUI = false;
+                            }
                             }
                         });
                     } catch (InterruptedException e) {
@@ -111,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new QueueFragment(), getString(R.string.queue));
         adapter.addFrag(new SearchFragment(), getString(R.string.search));
         adapter.addFrag(new SettingsFragment(), getString(R.string.settings));
@@ -124,21 +121,15 @@ public class MainActivity extends AppCompatActivity {
         QueueFragmentTAG = tag;
     }
 
-    public String getTabFragment(){
-        return QueueFragmentTAG;
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
-
         connection.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
         //connection.disconnect();
     }
 

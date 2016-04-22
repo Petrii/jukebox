@@ -93,10 +93,14 @@ public final class QueueList implements Parcelable{
         }
     }
 
-    public void addTrack(Track track) {
+    public synchronized void updateQueueList(Track track) {
         boolean trackIsListed = false;
         for( Track item : trackList) {
             if (item.getId() == track.getId()) {
+                    /*item.addVote(track, vote);
+                    Collections.sort(trackList, new OrderListByVotes());
+                    MainActivity.updateUI = true;
+                    return true;*/
                 trackIsListed = true;
             }
         }
@@ -111,7 +115,6 @@ public final class QueueList implements Parcelable{
      * Adding user vote thumps up or down
      * Vote is boolean, false is thumps down, and true is up
      *
-     * @param position
      * @param userId
      * @param vote
      */

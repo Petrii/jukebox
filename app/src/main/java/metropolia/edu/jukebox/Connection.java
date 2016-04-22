@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -16,11 +17,11 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AppIdentifier;
 import com.google.android.gms.nearby.connection.AppMetadata;
 import com.google.android.gms.nearby.connection.Connections;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import metropolia.edu.jukebox.queue.ParcelableUtil;
-import metropolia.edu.jukebox.queue.QueueFragment;
 import metropolia.edu.jukebox.queue.QueueList;
 import metropolia.edu.jukebox.queue.Track;
 
@@ -31,14 +32,14 @@ public class Connection implements
         Connections.MessageListener,
         Connections.EndpointDiscoveryListener {
 
-    private String TAG = "ConnectionTAG";
-    private Context context;
+    private static final String TAG = "ConnectionTAG";
+    private final Context context;
     private final GoogleApiClient googleApiClient;
     private boolean isConnected;
     private String remoteHostEndpoint;
     private List<String> remotePeerEndpoints = new ArrayList<>();
-    private QueueList queueList;
-    private ParcelableUtil parcelableUtil;
+    private final QueueList queueList;
+    private final ParcelableUtil parcelableUtil;
 
     public Connection(Context context) {
         this.context = context;
@@ -249,7 +250,7 @@ public class Connection implements
         Log.d(TAG, "onMessageReceived");
 
         if (MainActivity.isHost) {
-            queueList.addTrack(new Track(parcelableUtil.unmarshall(bytes)));
+            queueList.updateQueueList(new Track(parcelableUtil.unmarshall(bytes)));
 
             sendQueueListToClients();
         } else {

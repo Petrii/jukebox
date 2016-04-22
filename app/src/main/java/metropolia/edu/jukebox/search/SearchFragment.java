@@ -1,7 +1,7 @@
 package metropolia.edu.jukebox.search;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,12 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
+
 import java.util.List;
+
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 import metropolia.edu.jukebox.MainActivity;
 import metropolia.edu.jukebox.R;
-import metropolia.edu.jukebox.queue.QueueFragment;
 import metropolia.edu.jukebox.queue.QueueList;
 
 
@@ -96,20 +97,9 @@ public class SearchFragment extends Fragment implements Search.View {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String accessToken = MainActivity.TOKEN;
-
         queueList = QueueList.getInstance();
-
         mActionListener = new SearchPresenter(this.getContext(), this);
-        mActionListener.init(accessToken);
-
-        // Setup search results list
-        mAdapter = new SearchResultsAdapter(this.getContext(), new SearchResultsAdapter.ItemSelectedListener() {
-            @Override
-            public void onItemSelected(View itemView, Track item) {
-                mActionListener.selectTrack(item);
-            }
-        });
+        mActionListener.init(MainActivity.TOKEN);
 
         // If Activity was recreated wit active search restore it
         if (savedInstanceState != null) {

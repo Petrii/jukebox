@@ -12,12 +12,12 @@ public class CredentialsHandler {
     private static final String EXPIRES_AT = "expires_at";
 
     public static void setToken(Context context, String token, long expiresIn, TimeUnit unit) {
-        Context appContext = context.getApplicationContext();
+        final Context appContext = context.getApplicationContext();
 
         long now = System.currentTimeMillis();
         long expiresAt = now + unit.toMillis(expiresIn);
 
-        SharedPreferences sharedPref = getSharedPreferences(appContext);
+        final SharedPreferences sharedPref = getSharedPreferences(appContext);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(ACCESS_TOKEN, token);
         editor.putLong(EXPIRES_AT, expiresAt);
@@ -29,8 +29,8 @@ public class CredentialsHandler {
     }
 
     public static String getToken(Context context) {
-        Context appContext = context.getApplicationContext();
-        SharedPreferences sharedPref = getSharedPreferences(appContext);
+        final Context appContext = context.getApplicationContext();
+        final SharedPreferences sharedPref = getSharedPreferences(appContext);
 
         String token = sharedPref.getString(ACCESS_TOKEN, null);
         long expiresAt = sharedPref.getLong(EXPIRES_AT, 0L);

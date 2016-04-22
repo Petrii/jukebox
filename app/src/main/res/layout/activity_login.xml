@@ -1,23 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#232326">
 
-    <Button
-    android:id="@+id/button_login"
-    android:layout_width="150dp"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
-    android:onClick="onLoginButtonClicked"
-    android:text="@string/login_button"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linearLayout"
+        android:weightSum="1"
+        android:gravity="bottom">
 
-    <Button
-        android:id="@+id/button_join"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:id="@+id/imageView2"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.32"
+            android:src="@drawable/jukebox"
+            android:contentDescription="@string/jukebox_logo"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/welcome_text"
+            android:id="@+id/welcome_text"
+            android:textColor="#a493e2"
+            android:layout_weight="0.40"
+            android:textAlignment="center"
+            android:textIsSelectable="false"
+            android:width="270dp"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout"
+        android:layout_marginBottom="111dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:gravity="center_horizontal">
+
+        <Button
+        android:id="@+id/button_login"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:onClick="onJoinButtonClicked"
-        android:text="@string/join_party"
-        android:layout_above="@+id/button_login"
-        android:layout_alignStart="@+id/button_login" />
+        android:onClick="onLoginButtonClicked"
+        android:text="@string/login_button"
+            android:background="#a493e2"
+        android:textColor="#ffffff"
+            android:layout_marginRight="5dp"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/button_join"
+            android:background="@drawable/join_party_button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:onClick="onJoinButtonClicked"
+            android:text="@string/join_party"
+            android:textColor="#a493e2"
+            android:layout_marginLeft="10dp"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
 </RelativeLayout>

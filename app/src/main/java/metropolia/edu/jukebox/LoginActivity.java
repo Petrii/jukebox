@@ -26,17 +26,15 @@ public class LoginActivity extends Activity {
     }
 
     public void onLoginButtonClicked(View v){
-        String token = CredentialsHandler.getToken(this);
+        final String token = CredentialsHandler.getToken(this);
+
         if( token == null ){
-            AuthenticationRequest.Builder builder =
+            final AuthenticationRequest.Builder builder =
                     new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
             builder.setScopes(new String[]{"playlist-read"}); // Read your publicly available information
-            AuthenticationRequest request = builder.build();
-
+            final AuthenticationRequest request = builder.build();
             AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
         }
-        hosting = true;
-        startMainActivity();
     }
 
     public void onJoinButtonClicked(View v){
@@ -50,20 +48,19 @@ public class LoginActivity extends Activity {
 
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
-            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
+            final AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
             switch (response.getType()) {
                 // Response was successful and contains auth token
                 case TOKEN:
                     Log.d("Got token", ""+response.getAccessToken());
                     CredentialsHandler.setToken(this, response.getAccessToken(), response.getExpiresIn(), TimeUnit.SECONDS);
+                    hosting = true;
                     startMainActivity();
                     break;
-
                 // Auth flow returned an error
                 case ERROR:
                     Log.d("Auth error",""+response.getError());
                     break;
-
                 // Most likely auth flow was cancelled
                 default:
                     Log.d("Auth result",""+response.getType());
@@ -75,7 +72,7 @@ public class LoginActivity extends Activity {
     * @params String token
     */
     private void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("isHost", hosting);
         startActivity(intent);
         finish();

@@ -5,21 +5,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.app.Activity;
-import android.net.nsd.NsdServiceInfo;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import com.google.android.gms.nearby.Nearby;
-
-import metropolia.edu.jukebox.queue.QueueList;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements View.OnClickListener {
     private Button hostButton;

@@ -2,13 +2,9 @@ package metropolia.edu.jukebox.queue;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import kaaes.spotify.webapi.android.models.Image;
 
 /**
  * Created by petri on 5.4.2016.
@@ -19,6 +15,7 @@ public class Track implements Parcelable{
     private String track_name;
     private String track_artist;
     private String track_image;
+    private boolean userIsVoted = false;
     private List<Vote> vote = new ArrayList<>();
 
     public static final Creator<Track> CREATOR = new Creator() {
@@ -72,13 +69,13 @@ public class Track implements Parcelable{
      * @param newVote
      */
     public void addVote(String userId, boolean newVote){
-        boolean userIsVoted = false;
         for (Vote voteItem : vote) {
             if(voteItem.getUserID() == userId){
                 userIsVoted = true;
             }
         }
         if(!userIsVoted) vote.add(new Vote(userId, newVote));
+        userIsVoted = false;
     }
 
     /**

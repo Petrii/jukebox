@@ -8,8 +8,9 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
 
         <ImageView
             android:id="@+id/entity_image"
@@ -19,9 +20,10 @@
             android:layout_margin="5dp" />
 
         <LinearLayout
-            android:layout_width="155dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.97">
 
             <TextView
                 android:id="@+id/entity_title"
@@ -53,8 +55,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="81dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.01"
+            android:gravity="end">
 
             <ImageButton
                 android:layout_width="30dp"
@@ -76,11 +80,12 @@
                 android:contentDescription="@string/thumpsdown"
                 android:background="#00ffffff"
                 android:layout_margin="10dp"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/entity_votes"
-                android:layout_width="match_parent"
+                android:layout_width="38dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
                 android:gravity="top"

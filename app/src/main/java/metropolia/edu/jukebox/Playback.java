@@ -25,7 +25,7 @@ public final class Playback implements PlayerNotificationCallback,
     private final Config config;
     private boolean isPlay = false;
     private int duration = 1000; // Default time: 1 sek
-    QueueList queueList;
+    final QueueList queueList;
 
     public Playback(Context context ) {
         this.context = context;
@@ -44,9 +44,9 @@ public final class Playback implements PlayerNotificationCallback,
                         this.player.addConnectionStateCallback(Playback.this);
                         this.player.addPlayerNotificationCallback(Playback.this);
                         this.player.play("spotify:track:" + queueList.getTrackList().get(0).getId());
-                        queueList.deleteTrack();
+                        this.queueList.deleteTrack();
                         Thread.sleep(500);
-                        isPlay = true;
+                        this.isPlay = true;
                     }
                 }
             }
