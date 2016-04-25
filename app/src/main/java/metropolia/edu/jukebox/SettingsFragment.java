@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 
 public class SettingsFragment extends PreferenceFragmentCompat implements View.OnClickListener {
@@ -26,10 +27,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements View.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        final View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        final LinearLayout shareLayout = (LinearLayout)view.findViewById(R.id.share_invite_layout);
+        final LinearLayout joinLayout = (LinearLayout)view.findViewById(R.id.join_party_layout);
+        if(MainActivity.isHost){
+            shareLayout.setVisibility(View.VISIBLE);
+            joinLayout.setVisibility(View.GONE);
+        }else{
+            joinLayout.setVisibility(View.VISIBLE);
+            shareLayout.setVisibility(View.GONE);
+        }
         Button send = (Button) view.findViewById(R.id.clickSend);
         send.setOnClickListener(this);
-
         hostButton = (Button) view.findViewById(R.id.hostButton);
         hostButton.setOnClickListener(this);
         clientButton = (Button) view.findViewById(R.id.clientButton);

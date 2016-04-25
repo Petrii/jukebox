@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.widget.TextView;
 
 import com.spotify.sdk.android.player.Spotify;
 
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private String QueueFragmentTAG = "";
     private Playback playback;
     private QueueFragment queueFragment;
+    private ViewPager viewPager;
 
 
     @Override
@@ -35,22 +37,43 @@ public class MainActivity extends AppCompatActivity {
 
         this.connection = new Connection(this);
         this.isHost = intent.getBooleanExtra("isHost", false);
-        Log.d(TAG, "HOST: "+isHost);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
 
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_queue_music_white_48dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_search_white_48dp);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_share_white_48dp);
+        setupTabIcons();
+
 
         intitializeFragentTag();
 
         if(isHost){
-            this.playback = new Playback(this);
+            this.playback = new Playback(this, this);
             new Thread(playback).start();
         }
+    }
+
+    private void setupTabIcons() {
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+
+        final TextView tabQueue = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab,null);
+        tabQueue.setText("Playlist");
+        tabQueue.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_queue_music_white_24dp, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabQueue);
+
+        final TextView tabAdd = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab,null);
+        tabAdd.setText("Add Music");
+        tabAdd.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.add_music_icon, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabAdd);
+
+        final TextView tabShare = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab,null);
+        tabShare.setText("Share");
+        tabShare.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_share_white_24dp, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabShare);
+        /*
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_queue_music_white_48dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.add_music_icon);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_share_white_48dp);*/
     }
 
     /**
@@ -84,12 +107,10 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable(){
                             @Override
                             public void run() {
-                            Log.d(TAG, "uiUpdateThread handler");
-                            if(updateUI) {
-                                Log.d(TAG, "Updating");
-                                queueFragment.updateListView();
-                                updateUI = false;
-                            }
+                                if(updateUI) {
+                                    queueFragment.updateListView();
+                                    updateUI = false;
+                                }
                             }
                         });
                     } catch (InterruptedException e) {
@@ -136,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        connection.disconnect();
         Spotify.destroyPlayer(this);
         super.onDestroy();
     }

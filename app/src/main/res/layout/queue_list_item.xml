@@ -8,106 +8,91 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1">
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:weightSum="1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
 
         <ImageView
             android:id="@+id/entity_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@string/cover_art"
-            android:layout_margin="5dp" />
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="8dp" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="0.97">
+            android:layout_weight="1.01"
+            android:weightSum="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/entity_title"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:ellipsize="marquee"
+                android:layout_height="35dp"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/track_name"
                 android:textSize="16sp"
                 android:textColor="#FFF"
                 android:singleLine="false"
-                android:gravity="fill_vertical" />
+                android:visibility="visible"
+                android:gravity="bottom"
+                android:paddingBottom="4dp" />
 
             <TextView
                 android:id="@+id/entity_subtitle"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="36dp"
                 android:ellipsize="marquee"
-                android:gravity="top"
                 android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:scrollHorizontally="false"
                 android:text="@string/artist_name"
-                android:textSize="12sp"
-                android:textColor="#FFF" />
+                android:textSize="14sp"
+                android:textColor="#DCDCDC" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="81dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.01"
-            android:gravity="end">
+            android:layout_width="57dp"
+            android:layout_height="fill_parent"
+            android:gravity="end"
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:id="@+id/vote_up"
-                android:src="@drawable/ic_thumb_up_white_48dp"
-                android:layout_gravity="center_vertical"
+                android:src="@drawable/favorite"
                 android:contentDescription="@string/thumpsup"
                 android:background="#00ffffff"
-                android:layout_margin="10dp"
-                android:scaleType="fitCenter" />
-
-            <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/vote_down"
-                android:src="@drawable/ic_thumb_down_white_48dp"
-                android:layout_gravity="center_vertical"
-                android:contentDescription="@string/thumpsdown"
-                android:background="#00ffffff"
-                android:layout_margin="10dp"
                 android:scaleType="fitCenter"
-                android:visibility="gone" />
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center" />
+
 
             <TextView
                 android:id="@+id/entity_votes"
-                android:layout_width="38dp"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:gravity="top"
+                android:layout_width="59dp"
+                android:layout_height="match_parent"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#a3eb70"
+                android:textColor="#DCDCDC"
                 android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textSize="20sp"
-                android:layout_margin="3dp" />
+                android:textSize="14sp"
+                android:text="0 likes" />
 
         </LinearLayout>
-
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#d9d9d9"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp" />
+        android:background="#DCDCDC" />
 
 </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_marginBottom="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -8,15 +8,17 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1">
+        android:layout_height="70dp"
+        android:weightSum="1"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp">
 
         <ImageView
             android:id="@+id/entity_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="Cover art"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="8dp" />
 
         <LinearLayout
@@ -28,32 +30,32 @@
             <TextView
                 android:id="@+id/entity_title"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:ellipsize="marquee"
+                android:layout_height="35dp"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="16sp"
                 android:textColor="#FFF"
-                android:gravity="fill_vertical" />
+                android:text="@string/track_name"
+                android:gravity="bottom"
+                android:paddingBottom="4dp" />
 
             <TextView
                 android:id="@+id/entity_subtitle"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:ellipsize="marquee"
+                android:layout_height="35dp"
                 android:gravity="top"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textSize="12sp"
-                android:textColor="#FFF"/>
+                android:textSize="14dp"
+                android:textColor="#DCDCDC"
+                android:text="@string/artist_name" />
 
         </LinearLayout>
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:id="@+id/imageView"
             android:src="@drawable/ic_add_white_48dp"
             android:layout_gravity="center"
@@ -63,5 +65,9 @@
             android:backgroundTint="#00ffffff" />
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DCDCDC" />
 
 </LinearLayout>

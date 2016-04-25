@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Jukebox</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="join_party">Join The Party</string>
+    <string name="join_the_party">Join The Party</string>
+    <string name="join_a_party">Join a Party</string>
     <string name="login_button">Start New Party</string>
     <string name="create_jukebox">Create a new Jukebox</string>
     <string name="search">Add Music</string>
@@ -14,11 +15,11 @@
     <string name="cover_art">Cover art</string>
     <string name="thumpsdown">thumpsDown</string>
     <string name="thumpsup">thumpsUp</string>
-    <string name="empty_queuelist">Oh no!\n We don\'t have any songs to play!\n Go to the Search tab\n and\n add your favorite song to the queue list.</string>
     <string name="add_icon">add_icon</string>
     <string name="service_id">metropolia.edu.jukebox</string>
     <string name="google_app_id">jukebox-4219</string>
-    <string name="welcome_text">LB JUKEBOX is a sptofy-powerd app that lets your guest choose which music should be played using theri smartphone</string>
+    <string name="welcome_text">LB JUKEBOX is a spotify-powerd app that lets your guest choose which music should be played using their smartphone</string>
     <string name="logo">logo</string>
     <string name="jukebox_logo">jukebox_logo</string>
+    <string name="share_host_code">Share this code to who wants to join</string>
 </resources>

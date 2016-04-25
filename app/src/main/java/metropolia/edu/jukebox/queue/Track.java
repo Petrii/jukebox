@@ -70,7 +70,7 @@ public class Track implements Parcelable{
      */
     public void addVote(String userId, boolean newVote){
         for (Vote voteItem : vote) {
-            if(voteItem.getUserID() == userId){
+            if(voteItem.getUserID().equals(userId)){
                 userIsVoted = true;
             }
         }

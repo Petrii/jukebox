@@ -55,15 +55,17 @@ public class Connection implements
     }
 
     public void sendQueueListToClients() {
-        byte[] payload = parcelableUtil.marshall(queueList);
-
-        Nearby.Connections.sendReliableMessage(googleApiClient, remotePeerEndpoints, payload);
+        if(!remotePeerEndpoints.isEmpty()){
+            final byte[] payload = parcelableUtil.marshall(queueList);
+            Nearby.Connections.sendReliableMessage(googleApiClient, remotePeerEndpoints, payload);
+        }
     }
 
     public void sendTrackToHost(Track track) {
-        byte[] payload = parcelableUtil.marshall(track);
-
-        Nearby.Connections.sendReliableMessage(googleApiClient, remoteHostEndpoint, payload);
+        if(!remoteHostEndpoint.isEmpty()){
+            final byte[] payload = parcelableUtil.marshall(track);
+            Nearby.Connections.sendReliableMessage(googleApiClient, remoteHostEndpoint, payload);
+        }
     }
 
     public void discover() {
@@ -235,7 +237,7 @@ public class Connection implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
-        MainActivity.UserID = Nearby.Connections.getLocalEndpointId(googleApiClient);
+        MainActivity.UserID = Nearby.Connections.getLocalDeviceId(googleApiClient);
         if(MainActivity.isHost){
             advertise();
         }else{

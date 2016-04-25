@@ -16,7 +16,7 @@ public class LoginActivity extends Activity {
 
     public static final String CLIENT_ID = "5edab87c1536471aab90d32d5c528875";
     private static final String REDIRECT_URI = "lbjukebox://callback";
-    private static final int REQUEST_CODE = 1337;
+    private static final int REQUEST_CODE = 48567;
     private boolean hosting = false;
 
     @Override

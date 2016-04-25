@@ -31,7 +31,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         public final TextView subtitle;
         public final TextView votes;
         public final ImageView image;
-        public final ImageButton upVote, downVote;
+        public final ImageButton upVote;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -40,23 +40,18 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
             image = (ImageView) itemView.findViewById(R.id.entity_image);
             votes = (TextView) itemView.findViewById(R.id.entity_votes);
             upVote = (ImageButton) itemView.findViewById(R.id.vote_up);
-            downVote = (ImageButton) itemView.findViewById(R.id.vote_down);
             upVote.setOnClickListener(this);
-            downVote.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View v) {
-            Log.d(TAG, "Click");
-            switch(v.getId()){
-                case R.id.vote_down:
-                    break;
-                case R.id.vote_up:
-                    break;
+            try {
+                notifyItemChanged(getLayoutPosition());
+                mListener.onItemSelected(v, queueList.getTrackList().get(getAdapterPosition()), v.getId());
+            }catch(Exception e){
+                Log.d(TAG, "Input id not ");
             }
-            notifyItemChanged(getLayoutPosition());
-            mListener.onItemSelected(v, queueList.getTrackList().get(getAdapterPosition()), v.getId());
         }
     }
 
@@ -80,8 +75,8 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         Track item = queueList.getTrackList().get(position);
         holder.title.setText(item.getName());
-        holder.subtitle.setText(item.getArtist());
-        holder.votes.setText(""+item.getVotes());
+        holder.subtitle.setText("by "+item.getArtist());
+        holder.votes.setText(item.getVotes()+" likes");
         Picasso.with(mContext).load(item.getTrack_image()).into(holder.image);
     }
 

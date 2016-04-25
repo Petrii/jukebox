@@ -1,9 +1,8 @@
 package metropolia.edu.jukebox;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
+
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Player;
@@ -11,7 +10,6 @@ import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.Spotify;
 
-import metropolia.edu.jukebox.queue.QueueFragment;
 import metropolia.edu.jukebox.queue.QueueList;
 
 public final class Playback implements PlayerNotificationCallback,
@@ -25,10 +23,12 @@ public final class Playback implements PlayerNotificationCallback,
     private final Config config;
     private boolean isPlay = false;
     private int duration = 1000; // Default time: 1 sek
+    private final MainActivity mainActivity;
     final QueueList queueList;
 
-    public Playback(Context context ) {
+    public Playback(Context context, MainActivity activity ) {
         this.context = context;
+        this.mainActivity = activity;
         this.queueList = QueueList.getInstance();
         this.config = new Config(this.context, MainActivity.TOKEN, LoginActivity.CLIENT_ID);
         this.player = Spotify.getPlayer(this.config, this, this);
@@ -45,6 +45,7 @@ public final class Playback implements PlayerNotificationCallback,
                         this.player.addPlayerNotificationCallback(Playback.this);
                         this.player.play("spotify:track:" + queueList.getTrackList().get(0).getId());
                         this.queueList.deleteTrack();
+                        this.mainActivity.connection.sendQueueListToClients();
                         Thread.sleep(500);
                         this.isPlay = true;
                     }
@@ -71,6 +72,7 @@ public final class Playback implements PlayerNotificationCallback,
         switch(eventType.name()){
             case "TRACK_CHANGED":
                 Log.d(TAG, "TRACK_CHANGED");
+                Log.d(TAG, playerState.trackUri);
                 duration = playerState.durationInMs;
                 break;
             case "TRACK_END":

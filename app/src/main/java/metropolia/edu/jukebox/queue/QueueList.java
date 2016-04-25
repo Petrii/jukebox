@@ -83,7 +83,7 @@ public final class QueueList implements Parcelable{
     public synchronized void addToQueue(String id, String name, String artist, String image) {
         boolean trackIsListed = false;
         for( Track item : trackList) {
-            if (item.getId() == id) {
+            if (item.getId().equals(id)) {
                 trackIsListed = true;
             }
         }
@@ -97,28 +97,27 @@ public final class QueueList implements Parcelable{
 
     public synchronized void updateQueueList(Track track) {
         boolean trackIsListed = false;
+
         for( Track item : trackList) {
-            Log.d(TAG, item.getId()+" =" +track.getId());
-            if (item.getId().equals(track.getId())) {
-                for(Vote voteItem : item.getVoteList()){
-                    for( Vote voteItemTrack : track.getVoteList()){
-                        if( voteItem.getUserID().equals(voteItemTrack.getUserID())){
-                            item.addVote(voteItemTrack.getUserID(), voteItemTrack.getVote());
-                            Collections.sort(trackList, new OrderListByVotes());
-                            MainActivity.updateUI = true;
-                        }
-                    }
-                }
-                Log.d(TAG, "Track is listed");
+            if ( item.getId().equals(track.getId()) ) {
                 trackIsListed = true;
+                // If track is listed try update vote
+                int position = (track.getVoteList().size()-1);
+
+                item.addVote(
+                        track.getVoteList().get(position).getUserID(),
+                        track.getVoteList().get(position).getVote()
+                );
+                Log.d(TAG, "Track is listed");
             }
         }
+
         if(!trackIsListed){
             Log.d(TAG, "Track is not listed");
             trackList.add(track);
-            Collections.sort(trackList, new OrderListByVotes());
-            MainActivity.updateUI = true;
         }
+        MainActivity.updateUI = true;
+        Collections.sort(trackList, new OrderListByVotes());
     }
 
     /**
