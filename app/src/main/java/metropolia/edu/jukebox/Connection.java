@@ -62,7 +62,7 @@ public class Connection implements
     }
 
     public void sendTrackToHost(Track track) {
-        if(!remoteHostEndpoint.isEmpty()){
+        if(remoteHostEndpoint != null){
             final byte[] payload = parcelableUtil.marshall(track);
             Nearby.Connections.sendReliableMessage(googleApiClient, remoteHostEndpoint, payload);
         }
@@ -230,7 +230,6 @@ public class Connection implements
             Nearby.Connections.disconnectFromEndpoint(googleApiClient, remoteHostEndpoint);
             remoteHostEndpoint = null;
         }
-
         isConnected = false;
     }
 

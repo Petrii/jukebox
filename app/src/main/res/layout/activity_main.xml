@@ -30,8 +30,6 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/custom_tab_layout_height"
-                android:minWidth="@dimen/custom_tab_layout_min_width"
-                app:tabMaxWidth="@dimen/custom_tab_layout_max_width"
                 app:tabMode="fixed"
                 app:tabGravity="fill"
                 android:textAlignment="center" />

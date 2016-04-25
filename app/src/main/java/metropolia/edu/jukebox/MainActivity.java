@@ -63,17 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView tabAdd = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab,null);
         tabAdd.setText("Add Music");
-        tabAdd.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.add_music_icon, 0, 0);
+        tabAdd.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.add_music, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabAdd);
 
         final TextView tabShare = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab,null);
         tabShare.setText("Share");
         tabShare.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_share_white_24dp, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabShare);
-        /*
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_queue_music_white_48dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.add_music_icon);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_share_white_48dp);*/
     }
 
     /**
@@ -150,9 +146,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("isHost", isHost);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(!TOKEN.isEmpty())
+            isHost = savedInstanceState.getBoolean("isHost");
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        //connection.disconnect();
     }
 
     @Override
