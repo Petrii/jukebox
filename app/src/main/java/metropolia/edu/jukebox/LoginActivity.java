@@ -18,16 +18,16 @@ public class LoginActivity extends Activity {
     private static final String REDIRECT_URI = "lbjukebox://callback";
     private static final int REQUEST_CODE = 48567;
     private boolean hosting = false;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        token = CredentialsHandler.getToken(this);
     }
 
     public void onLoginButtonClicked(View v){
-        final String token = CredentialsHandler.getToken(this);
-
         if( token == null ){
             final AuthenticationRequest.Builder builder =
                     new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);

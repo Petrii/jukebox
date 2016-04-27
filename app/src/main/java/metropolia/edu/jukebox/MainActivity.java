@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
@@ -22,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     public Connection connection;
-    private String QueueFragmentTAG = "";
     private Playback playback;
+    private String QueueFragmentTAG = "";
     private QueueFragment queueFragment;
     private ViewPager viewPager;
 
@@ -42,13 +43,10 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
 
         setupTabIcons();
-
-
-        intitializeFragentTag();
+        intitializeFragmentTag();
 
         if(isHost){
             this.playback = new Playback(this, this);
-            new Thread(playback).start();
         }
     }
 
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
      * This wait QueueFragmentTAG and send it to Playback
      * Playback use this fragment to update QueueList ListView
      */
-    private void intitializeFragentTag(){
+    private void intitializeFragmentTag(){
         Runnable setup = new Runnable() {
             @Override
             public void run() {
@@ -85,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
                     // and then start player.
                 }
                 uiUpdateThread();
+                Log.d(TAG, "start playback");
+                new Thread(playback).start();
             }
         };
         new Thread(setup).start();
@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
                                 if(updateUI) {
                                     queueFragment.updateListView();
                                     updateUI = false;
+                                }
+                                if(!playback.isPlay()){
+                                    queueFragment.updateMediaButton();
                                 }
                             }
                         });
@@ -133,6 +136,18 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(2);
+    }
+
+    public void mediaResme(){
+        playback.resume();
+    }
+
+    public void mediaPause(){
+        playback.pause();
+    }
+
+    public void mediaNext(){
+        playback.next();
     }
 
     public void setTabFragment(String tag){

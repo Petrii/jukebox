@@ -37,7 +37,9 @@ public final class QueueList implements Parcelable{
     public static QueueList getInstance(){
         if(instance == null){
             synchronized (QueueList.class){
-                instance = new QueueList();
+                if(instance == null) {
+                    instance = new QueueList();
+                }
             }
         }
         return instance;
@@ -67,7 +69,7 @@ public final class QueueList implements Parcelable{
         return trackList;
     }
 
-    public void setList(List<Track> tracks){
+    public synchronized void setList(List<Track> tracks){
         trackList = tracks;
     }
 
@@ -147,7 +149,14 @@ public final class QueueList implements Parcelable{
         MainActivity.updateUI = true;
     }
 
-    public void clearData() {
+    public int getListSize(){
+       if(trackList == null || trackList.isEmpty() || trackList.size() < 1){
+           return 0;
+       }
+        return trackList.size();
+    }
+
+    public synchronized void clearData() {
         if(!trackList.isEmpty())
             trackList.clear();
     }

@@ -9,20 +9,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import metropolia.edu.jukebox.MainActivity;
+import metropolia.edu.jukebox.Playback;
 import metropolia.edu.jukebox.R;
 
 /**
  * Created by petri on 30.3.2016.
  */
-public class QueueFragment extends Fragment {
+public class QueueFragment extends Fragment{
 
     private static final String TAG = "QueueFragment";
     private static final String QUEUE_LIST_BUNDLE = "QueueList";
     private QueueListAdapter mAdapter;
     private View view;
     private QueueList queueList;
+    private Button playPause, nextButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,8 +35,36 @@ public class QueueFragment extends Fragment {
         resultsList.setHasFixedSize(true);
         resultsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
         resultsList.setAdapter(mAdapter);
+        playPause = (Button)view.findViewById(R.id.playPause);
+        playPause.setOnClickListener(mToggleMediaButton);
+        nextButton = (Button)view.findViewById(R.id.next);
+        nextButton.setOnClickListener(mToggleMediaButton);
         return view;
     }
+
+    View.OnClickListener mToggleMediaButton = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.playPause:
+                    if(Playback.isPlay()) {
+                        Log.d(TAG, "pause: " +Playback.isPlay());
+                        ((MainActivity) getActivity()).mediaPause();
+                        playPause.setBackgroundResource(android.R.drawable.ic_media_play);
+                    }else{
+                        Log.d(TAG, "play: " +Playback.isPlay());
+                        ((MainActivity) getActivity()).mediaResme();
+                        playPause.setBackgroundResource(android.R.drawable.ic_media_pause);
+                    }
+                    break;
+                case R.id.next:
+                    ((MainActivity) getActivity()).mediaNext();
+                    break;
+            }
+
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,11 +77,8 @@ public class QueueFragment extends Fragment {
         mAdapter = new QueueListAdapter(this.getContext(), new QueueListAdapter.ItemSelectedListener() {
             @Override
             public void onItemSelected(View itemView, final Track item, int buttonId) {
-                /**
-                 * Thumps ups button
-                 */
+                // Like Button
                 boolean isUpdated = false;
-                Log.d(TAG, "klik "+item.getArtist());
                 if(buttonId == R.id.vote_up){
                     isUpdated = queueList.updateVote(item.getId(), MainActivity.UserID, true);
                 }
@@ -67,6 +95,10 @@ public class QueueFragment extends Fragment {
 
     public void updateListView(){
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void updateMediaButton(){
+        playPause.setBackgroundResource(android.R.drawable.ic_media_play);
     }
 
     @Override

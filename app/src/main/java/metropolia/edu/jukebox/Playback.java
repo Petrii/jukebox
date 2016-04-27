@@ -21,7 +21,8 @@ public final class Playback implements PlayerNotificationCallback,
     private final Context context;
     private final Player player;
     private final Config config;
-    private boolean isPlay = false;
+    private static boolean isPlay = false;
+    private boolean isUserInput = false;
     private int duration = 1000; // Default time: 1 sek
     private final MainActivity mainActivity;
     final QueueList queueList;
@@ -34,12 +35,37 @@ public final class Playback implements PlayerNotificationCallback,
         this.player = Spotify.getPlayer(this.config, this, this);
     }
 
+    public static boolean isPlay() {
+        return isPlay;
+    }
+
+    public void resume(){
+        player.resume();
+        isPlay = true;
+        isUserInput = true;
+    }
+    public void pause(){
+        player.pause();
+        isPlay = false;
+        isUserInput = true;
+    }
+
+    public void next(){
+        player.skipToNext();
+        isPlay = false;
+        isUserInput = false;
+    }
+
+    public void repeat(boolean isRepeat) {
+        player.setRepeat(isRepeat);
+    }
+
     @Override
     public void run(){
         try {
             while (true) {
                 Thread.sleep(1000);
-                if ( isPlay == false ) {
+                if ( isPlay == false && isUserInput == false ) {
                     if ( queueList.getTrackList().size() > 0 ) {
                         this.player.addConnectionStateCallback(Playback.this);
                         this.player.addPlayerNotificationCallback(Playback.this);
@@ -73,11 +99,12 @@ public final class Playback implements PlayerNotificationCallback,
             case "TRACK_CHANGED":
                 Log.d(TAG, "TRACK_CHANGED");
                 Log.d(TAG, playerState.trackUri);
-                duration = playerState.durationInMs;
+                isUserInput = false;
                 break;
             case "TRACK_END":
                 Log.d(TAG, "TRACK_END");
                 isPlay = false;
+                isUserInput = false;
                 break;
             case "PAUSE":
                 isPlay = false;
