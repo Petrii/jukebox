@@ -70,10 +70,14 @@ public final class Playback implements PlayerNotificationCallback,
                         this.player.addConnectionStateCallback(Playback.this);
                         this.player.addPlayerNotificationCallback(Playback.this);
                         this.player.play("spotify:track:" + queueList.getTrackList().get(0).getId());
+                        this.isPlay = true;
                         this.queueList.deleteTrack();
                         this.mainActivity.connection.sendQueueListToClients();
-                        Thread.sleep(500);
-                        this.isPlay = true;
+                        Thread.sleep(100);
+                        MainActivity.updateUI = true;
+                    } else {
+
+                        MainActivity.updateUI = true;
                     }
                 }
             }

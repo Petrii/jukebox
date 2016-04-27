@@ -21,6 +21,12 @@ public final class QueueList implements Parcelable{
     private static final String TAG = "QueueList";
     private static List<Track> trackList = new ArrayList<>();
 
+    public static void setNowPlaying(Track nowPlaying) {
+        QueueList.nowPlaying = nowPlaying;
+    }
+
+    private static Track nowPlaying;
+
     public static final Creator<QueueList> CREATOR = new Creator(){
         public QueueList createFromParcel(Parcel source){
             return new QueueList(source);
@@ -29,6 +35,10 @@ public final class QueueList implements Parcelable{
             return new QueueList[size];
         }
     };
+
+    public static Track getNowPlaying() {
+        return nowPlaying;
+    }
 
     public int describeContents() {
         return 0;
@@ -53,10 +63,12 @@ public final class QueueList implements Parcelable{
 
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.trackList);
+        dest.writeParcelable(this.nowPlaying, flags);
     }
 
     public QueueList(Parcel in){
         this.trackList = in.createTypedArrayList(Track.CREATOR);
+        this.nowPlaying = (Track) in.readParcelable(Track.class.getClassLoader());
     }
 
     /**
@@ -145,8 +157,8 @@ public final class QueueList implements Parcelable{
      *  Remove now playing track from queue list
      */
     public synchronized void deleteTrack(){
+        nowPlaying = trackList.get(0);
         trackList.remove(0);
-        MainActivity.updateUI = true;
     }
 
     public int getListSize(){

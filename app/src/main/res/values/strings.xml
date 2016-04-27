@@ -22,4 +22,6 @@
     <string name="logo">logo</string>
     <string name="jukebox_logo">jukebox_logo</string>
     <string name="share_host_code">Share this code to who wants to join</string>
+    <string name="playlist_is_empty">Playlist is empty</string>
+    <string name="add_music_to_playlist">Add music to playlist</string>
 </resources>

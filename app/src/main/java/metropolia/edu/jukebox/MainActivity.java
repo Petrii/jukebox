@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                                     queueFragment.updateListView();
                                     updateUI = false;
                                 }
-                                queueFragment.updateMediaButton();
                             }
                         });
                     } catch (InterruptedException e) {
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(2);
     }
 
-    public void mediaResme(){
+    public void mediaResume(){
         playback.resume();
     }
 

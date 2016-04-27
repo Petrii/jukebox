@@ -43,11 +43,6 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
         view = inflater.inflate(R.layout.fragment_queue, container, false);
         ((MainActivity)getActivity()).setTabFragment(getTag());
 
-        /*RecyclerView resultsList = (RecyclerView) view.findViewById(R.id.queue_list);
-        resultsList.setHasFixedSize(true);
-        resultsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        resultsList.setAdapter(mAdapter);*/
-
         resultsList = (ObservableRecyclerView) view.findViewById(R.id.queue_list);
         resultsList.setScrollViewCallbacks(this);
         resultsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -56,11 +51,17 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
         nowArtist = (TextView)view.findViewById(R.id.now_artist);
         nowTrack = (TextView)view.findViewById(R.id.now_track);
         imageView = (ImageView)view.findViewById(R.id.artist_image);
-        playPause = (Button)view.findViewById(R.id.playPause);
-        playPause.setOnClickListener(mToggleMediaButton);
-        nextButton = (Button)view.findViewById(R.id.next);
-        nextButton.setOnClickListener(mToggleMediaButton);
         frameLayout = (FrameLayout)view.findViewById(R.id.frame_playing);
+        playPause = (Button)view.findViewById(R.id.playPause);
+        nextButton = (Button)view.findViewById(R.id.next);
+
+        if (MainActivity.isHost) {
+            playPause.setOnClickListener(mToggleMediaButton);
+            nextButton.setOnClickListener(mToggleMediaButton);
+        } else {
+            playPause.setVisibility(View.GONE);
+            nextButton.setVisibility(View.GONE);
+        }
 
         return view;
     }
@@ -77,12 +78,17 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
                         playPause.setBackgroundResource(android.R.drawable.ic_media_play);
                     }else{
                         Log.d(TAG, "play: " +Playback.isPlay());
-                        ((MainActivity) getActivity()).mediaResme();
+                        if (QueueList.getNowPlaying() != null) {
+                            ((MainActivity) getActivity()).mediaResume();
+                        }
+
                         playPause.setBackgroundResource(android.R.drawable.ic_media_pause);
                     }
+                    MainActivity.updateUI = true;
                     break;
                 case R.id.next:
                     ((MainActivity) getActivity()).mediaNext();
+                    MainActivity.updateUI = true;
                     break;
             }
 
@@ -117,20 +123,25 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
     }
 
     public void updateListView(){
-        if(!queueList.getTrackList().isEmpty()){
-            Picasso.with(getContext()).load(queueList.getTrackList()
-                    .get(0).getTrack_image()).into(imageView);
-            nowArtist.setText(queueList.getTrackList().get(0).getArtist());
-            nowTrack.setText(queueList.getTrackList().get(0).getName());
+        if(QueueList.getNowPlaying() != null){
+            Picasso.with(getContext()).load(QueueList.getNowPlaying().getTrack_image()).into(imageView);
+            nowArtist.setText(QueueList.getNowPlaying().getArtist());
+            nowTrack.setText(QueueList.getNowPlaying().getName());
         }
-        mAdapter.notifyDataSetChanged();
-    }
 
-    public void updateMediaButton(){
+        if (!Playback.isPlay() && queueList.getTrackList().isEmpty()) {
+            nowArtist.setText(getString(R.string.playlist_is_empty));
+            nowTrack.setText(getString(R.string.add_music_to_playlist));
+            imageView.setImageDrawable(null);
+            QueueList.setNowPlaying(null);
+        }
+
         if(!Playback.isPlay())
             playPause.setBackgroundResource(android.R.drawable.ic_media_play);
         else
             playPause.setBackgroundResource(android.R.drawable.ic_media_pause);
+
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

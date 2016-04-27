@@ -15,10 +15,7 @@
             android:id="@+id/artist_image"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginTop="15dp" />
+            android:scaleType="fitXY" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -38,7 +35,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="artist"
+                    android:text="@string/playlist_is_empty"
                     android:id="@+id/now_artist"
                     android:textSize="20sp"
                     android:textColor="#FFF"
@@ -49,7 +46,7 @@
                     android:id="@+id/now_track"
                     android:textSize="16sp"
                     android:textColor="#FFF"
-                    android:text="track" />
+                    android:text="@string/add_music_to_playlist" />
             </LinearLayout>
 
             <LinearLayout
