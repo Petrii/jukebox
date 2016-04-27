@@ -15,7 +15,8 @@
 
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:screenOrientation="portrait"

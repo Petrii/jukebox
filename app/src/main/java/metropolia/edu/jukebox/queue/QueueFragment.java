@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import metropolia.edu.jukebox.MainActivity;
 import metropolia.edu.jukebox.Playback;
@@ -24,8 +28,10 @@ public class QueueFragment extends Fragment{
     private static final String QUEUE_LIST_BUNDLE = "QueueList";
     private QueueListAdapter mAdapter;
     private View view;
+    private TextView nowArtist, nowTrack;
     private QueueList queueList;
     private Button playPause, nextButton;
+    private ImageView imageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +41,9 @@ public class QueueFragment extends Fragment{
         resultsList.setHasFixedSize(true);
         resultsList.setLayoutManager(new LinearLayoutManager(this.getContext()));
         resultsList.setAdapter(mAdapter);
+        nowArtist = (TextView)view.findViewById(R.id.now_artist);
+        nowTrack = (TextView)view.findViewById(R.id.now_track);
+        imageView = (ImageView)view.findViewById(R.id.artist_image);
         playPause = (Button)view.findViewById(R.id.playPause);
         playPause.setOnClickListener(mToggleMediaButton);
         nextButton = (Button)view.findViewById(R.id.next);
@@ -94,11 +103,20 @@ public class QueueFragment extends Fragment{
     }
 
     public void updateListView(){
+        if(queueList.getTrackList().size() != 0){
+            Picasso.with(getContext()).load(queueList.getTrackList()
+                    .get(0).getTrack_image()).into(imageView);
+            nowArtist.setText(queueList.getTrackList().get(0).getArtist());
+            nowTrack.setText(queueList.getTrackList().get(0).getName());
+        }
         mAdapter.notifyDataSetChanged();
     }
 
     public void updateMediaButton(){
-        playPause.setBackgroundResource(android.R.drawable.ic_media_play);
+        if(!Playback.isPlay())
+            playPause.setBackgroundResource(android.R.drawable.ic_media_play);
+        else
+            playPause.setBackgroundResource(android.R.drawable.ic_media_pause);
     }
 
     @Override

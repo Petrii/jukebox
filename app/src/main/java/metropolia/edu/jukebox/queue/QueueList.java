@@ -150,7 +150,7 @@ public final class QueueList implements Parcelable{
     }
 
     public int getListSize(){
-       if(trackList == null || trackList.isEmpty() || trackList.size() < 1){
+       if(trackList == null){
            return 0;
        }
         return trackList.size();
