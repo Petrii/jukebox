@@ -123,25 +123,32 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
     }
 
     public void updateListView(){
-        if(QueueList.getNowPlaying() != null){
-            Picasso.with(getContext()).load(QueueList.getNowPlaying().getTrack_image()).into(imageView);
-            nowArtist.setText(QueueList.getNowPlaying().getArtist());
-            nowTrack.setText(QueueList.getNowPlaying().getName());
-        }
-
-        if (!Playback.isPlay() && queueList.getTrackList().isEmpty()) {
-            nowArtist.setText(getString(R.string.playlist_is_empty));
-            nowTrack.setText(getString(R.string.add_music_to_playlist));
-            imageView.setImageDrawable(null);
-            QueueList.setNowPlaying(null);
-        }
-
         if(!Playback.isPlay())
             playPause.setBackgroundResource(android.R.drawable.ic_media_play);
         else
             playPause.setBackgroundResource(android.R.drawable.ic_media_pause);
 
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void updateNowPlaying() {
+        if(QueueList.getNowPlaying() != null){
+            Picasso.with(getContext()).load(QueueList.getNowPlaying().getTrack_image()).into(imageView);
+            nowArtist.setText(QueueList.getNowPlaying().getArtist());
+            nowTrack.setText(QueueList.getNowPlaying().getName());
+        }
+
+        try {
+            if (!Playback.isPlay() && queueList.getTrackList().isEmpty()) {
+                nowArtist.setText(getString(R.string.playlist_is_empty));
+                nowTrack.setText(getString(R.string.add_music_to_playlist));
+                imageView.setImageDrawable(null);
+                QueueList.setNowPlaying(null);
+            }
+        } catch (Exception e) {
+
+        }
+
     }
 
     @Override

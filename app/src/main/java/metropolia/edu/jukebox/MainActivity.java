@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
                                     queueFragment.updateListView();
                                     updateUI = false;
                                 }
+
+                                queueFragment.updateNowPlaying();
                             }
                         });
                     } catch (InterruptedException e) {
