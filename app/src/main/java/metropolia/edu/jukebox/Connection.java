@@ -1,5 +1,6 @@
 package metropolia.edu.jukebox;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,15 +34,18 @@ public class Connection implements
         Connections.EndpointDiscoveryListener {
 
     private static final String TAG = "ConnectionTAG";
+    private static final String TAG2 = "MessageListenerTAG";
     private final Context context;
     private final GoogleApiClient googleApiClient;
+    private final Activity activity;
     private boolean isConnected;
-    private String remoteHostEndpoint;
+    private String remoteHostEndpoint = null;
     private List<String> remotePeerEndpoints = new ArrayList<>();
     private final QueueList queueList;
     private final ParcelableUtil parcelableUtil;
 
-    public Connection(Context context) {
+    public Connection(Context context, Activity activity) {
+        this.activity = activity;
         this.context = context;
 
         googleApiClient = new GoogleApiClient.Builder(this.context)
@@ -61,10 +65,16 @@ public class Connection implements
         }
     }
 
-    public void sendTrackToHost(Track track) {
-        if(remoteHostEndpoint != null){
-            final byte[] payload = parcelableUtil.marshall(track);
-            Nearby.Connections.sendReliableMessage(googleApiClient, remoteHostEndpoint, payload);
+    public boolean sendTrackToHost(Track track) {
+        if(googleApiClient.isConnected()) {
+            if (remoteHostEndpoint != null) {
+                final byte[] payload = parcelableUtil.marshall(track);
+                Nearby.Connections.sendReliableMessage(googleApiClient, remoteHostEndpoint, payload);
+                return true;
+            }
+            return false;
+        }else{
+            return false;
         }
     }
 
@@ -186,7 +196,8 @@ public class Connection implements
     }
 
     private boolean isConnectedToNetwork() {
-        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo info = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (info != null && info.isConnectedOrConnecting()) {

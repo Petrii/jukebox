@@ -47,13 +47,13 @@
         android:gravity="center_horizontal">
 
         <Button
-        android:id="@+id/button_login"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:onClick="onLoginButtonClicked"
-        android:text="@string/login_button"
+            android:id="@+id/button_login"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:onClick="onLoginButtonClicked"
+            android:text="@string/login_button"
             android:background="#a493e2"
-        android:textColor="#ffffff"
+            android:textColor="#ffffff"
             android:layout_marginRight="5dp"
             android:textSize="14sp" />
 

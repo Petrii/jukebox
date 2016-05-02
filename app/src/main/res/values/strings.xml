@@ -1,14 +1,13 @@
 <resources>
     <string name="app_name">Jukebox</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="join_the_party">Join The Party</string>
-    <string name="join_a_party">Join a Party</string>
+    <string name="join_the_party">Join the party</string>
+    <string name="join_a_party">Join a party</string>
     <string name="login_button">Start New Party</string>
     <string name="create_jukebox">Create a new Jukebox</string>
     <string name="search">Add Music</string>
     <string name="queue">Playlist</string>
     <string name="settings">Share Party</string>
-    <string name="join_code">Jukebox join code</string>
     <string name="track_name">Track Name</string>
     <string name="artist_name">Artist name</string>
     <string name="_4">+4</string>
@@ -18,10 +17,14 @@
     <string name="add_icon">add_icon</string>
     <string name="service_id">metropolia.edu.jukebox</string>
     <string name="google_app_id">jukebox-4219</string>
-    <string name="welcome_text">LB JUKEBOX is a spotify-powerd app that lets your guest choose which music should be played using their smartphone</string>
+    <string name="welcome_text">LB JUKEBOX is a Spotify-powered app that lets your guest choose which music should be played using their smartphone</string>
     <string name="logo">logo</string>
     <string name="jukebox_logo">jukebox_logo</string>
-    <string name="share_host_code">Share this code to who wants to join</string>
+    <string name="share_host_code">Share the party!</string>
+    <string name="share_host_code_info">Ask guest to join your party by entering the ID above in LB JUKEBOX</string>
+    <string name="join_code">Join the party!</string>
+    <string name="join_code_info">Join the party by entering the ID above in LB JUKEOBX</string>
     <string name="playlist_is_empty">Playlist is empty</string>
     <string name="add_music_to_playlist">Add music to playlist</string>
+    <string name="enter_party_id">Enter party ID</string>
 </resources>

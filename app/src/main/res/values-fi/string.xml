@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Jukebox</string>
-    <string name="login_button">Kirjaudu Spotify tunnuksella</string>
-    <string name="join_party">Liity Bileisiin</string>
-    <string name="search">Hae</string>
-    <string name="queue">Soittolista</string>
-    <string name="settings">Asetukset</string>
-</resources>

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,17 +72,19 @@ public class SearchFragment extends Fragment implements Search.View {
                 if (MainActivity.isHost) {
                     queueList.addToQueue(item.id, item.name, artist, item.album.images.get(0).url);
                     ((MainActivity) getActivity()).connection.sendQueueListToClients();
+                    Toast.makeText(getContext(), item.name+" added to playlist!", Toast.LENGTH_SHORT).show();
                 } else {
-                    ((MainActivity) getActivity()).connection.sendTrackToHost(
+                    if(((MainActivity) getActivity()).connection.sendTrackToHost(
                             new metropolia.edu.jukebox.queue.Track(
                                     item.id,
                                     item.name,
                                     artist,
-                                    item.album.images.get(0).url));
+                                    item.album.images.get(0).url))){
+                        Toast.makeText(getContext(), item.name+" added to playlist!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "You are not connected to host!", Toast.LENGTH_SHORT).show();
+                    }
                 }
-
-                // Just some user input indicator
-                Toast.makeText(getContext(), item.name+" added to queue!", Toast.LENGTH_SHORT).show();
             }
         });
 
