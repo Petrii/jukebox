@@ -22,25 +22,25 @@
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyCIBghJs4rcEz3L2SxwkL0PXvx2cKuPOzg" />
 
-
-
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
         </activity>
+
         <activity
             android:screenOrientation="portrait"
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEND"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name=".BeaconService"
             android:exported="true" />
     </application>

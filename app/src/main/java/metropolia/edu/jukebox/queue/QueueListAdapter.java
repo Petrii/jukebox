@@ -73,7 +73,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Track item = queueList.getTrackList().get(position);
+        final Track item = queueList.getTrackList().get(position);
         holder.title.setText(item.getName());
         holder.subtitle.setText("by "+item.getArtist());
         holder.votes.setText(item.getVotes()+" likes");

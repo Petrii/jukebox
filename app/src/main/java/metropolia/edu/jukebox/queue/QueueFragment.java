@@ -30,7 +30,6 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
     private static final String TAG = "QueueFragment";
     private static final String QUEUE_LIST_BUNDLE = "QueueList";
     private QueueListAdapter mAdapter;
-    private View view;
     private TextView nowArtist, nowTrack;
     private QueueList queueList;
     private Button playPause, nextButton;
@@ -40,7 +39,7 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_queue, container, false);
+        final View view = inflater.inflate(R.layout.fragment_queue, container, false);
         ((MainActivity)getActivity()).setTabFragment(getTag());
 
         resultsList = (ObservableRecyclerView) view.findViewById(R.id.queue_list);

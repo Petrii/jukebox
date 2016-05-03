@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,19 +35,23 @@ public class Connection implements
         Connections.EndpointDiscoveryListener {
 
     private static final String TAG = "ConnectionTAG";
-    private static final String TAG2 = "MessageListenerTAG";
-    private final Context context;
-    private final GoogleApiClient googleApiClient;
-    private final Activity activity;
-    private boolean isConnected;
-    private String remoteHostEndpoint = null;
-    private List<String> remotePeerEndpoints = new ArrayList<>();
     private final QueueList queueList;
     private final ParcelableUtil parcelableUtil;
+    private final Context context;
+    private final Activity activity;
+    private final GoogleApiClient googleApiClient;
 
-    public Connection(Context context, Activity activity) {
+    private boolean isConnected;
+    private boolean mIsHost = false;
+    private String clientAuthCode = null;
+    private String remoteHostEndpoint = null;
+    private List<String> remotePeerEndpoints = new ArrayList<>();
+
+
+    public Connection(Context context, Activity activity, boolean isHost) {
         this.activity = activity;
         this.context = context;
+        this.mIsHost = isHost;
 
         googleApiClient = new GoogleApiClient.Builder(this.context)
                 .addConnectionCallbacks(this)
@@ -78,14 +83,13 @@ public class Connection implements
         }
     }
 
-    public void discover() {
+    public void discover(String clientAuth) {
         if (!isConnectedToNetwork()) {
-            return;
+           connect();
         }
-
-        MainActivity.isHost = false;
-        String serviceId = context.getString(R.string.service_id);
-        long CONNECTION_TIME_OUT = 10000L;
+        this.clientAuthCode = clientAuth;
+        final String serviceId = context.getString(R.string.service_id);
+        long CONNECTION_TIME_OUT = 1000L;
 
         Nearby.Connections.startDiscovery(googleApiClient, serviceId, CONNECTION_TIME_OUT, this).setResultCallback(new ResultCallback<Status>() {
             @Override
@@ -99,53 +103,47 @@ public class Connection implements
         });
     }
 
+    /**
+     * Client
+     *
+     * @param endpointId
+     * @param deviceId
+     * @param serviceId
+     * @param endpointName
+     */
     @Override
     public void onEndpointFound(String endpointId,
                                 final String deviceId,
                                 final String serviceId,
                                 String endpointName) {
 
-        byte[] payload = null;
-
-        Log.d(TAG, "onEndpointFound");
-
+        byte[] payload = clientAuthCode.getBytes();
         try {
             Nearby.Connections.sendConnectionRequest(googleApiClient, deviceId, endpointId, payload, new Connections.ConnectionResponseCallback() {
                 @Override
                 public void onConnectionResponse(String endpointId, Status status, byte[] bytes) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, "Connected to: "+ endpointId);
                         Nearby.Connections.stopDiscovery(googleApiClient, serviceId);
                         remoteHostEndpoint = endpointId;
-
-                        if (!MainActivity.isHost) {
-                            isConnected = true;
-                        }
+                        showToast("Connected to host");
+                        isConnected = true;
                     } else {
-                        Log.d(TAG, "Connection failed to host: "+ endpointId);
-                        Log.d(TAG, "Status code: "+ status.getStatus().getStatusCode());
-                        Log.d(TAG, "Device Id: "+ deviceId);
-
-                        if (!MainActivity.isHost) {
-                            isConnected = false;
-                        }
+                        showToast("Connection failed to host!");
+                        isConnected = false;
                     }
                 }
             }, this);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    public void advertise() {
+    public void advertise(String clientAuth) {
         if (!isConnectedToNetwork()) {
             return;
         }
-
-        Log.d(TAG, "Trying to advertise.");
-
-        MainActivity.isHost = true;
+        clientAuthCode = clientAuth;
+        // The advertising timeout is set to run indefinitely
         long CONNECTION_TIME_OUT = 0L;
 
         List<AppIdentifier> appIdentifierList = new ArrayList<>();
@@ -164,29 +162,34 @@ public class Connection implements
         });
     }
 
+    /**
+     * Server
+     *
+     * @param remoteEndpointId
+     * @param remoteDeviceId
+     * @param remoteEndpointName
+     * @param payload
+     */
     @Override
     public void onConnectionRequest(final String remoteEndpointId,
                                     final String remoteDeviceId,
                                     final String remoteEndpointName,
                                     byte[] payload) {
-        if (MainActivity.isHost) {
-            byte[] myPayload = null;
+        final byte[] myPayload = null;
+        final String code = new String(payload);
+        if (mIsHost && code.equals(clientAuthCode)) {
             Nearby.Connections.acceptConnectionRequest(googleApiClient, remoteEndpointId, myPayload, this).setResultCallback(new ResultCallback<Status>() {
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, "New client connected remoteEndpointName: "+ remoteEndpointName);
-                        Log.d(TAG, "New client connected remoteDeviceId: "+ remoteDeviceId);
-                        Log.d(TAG, "New client connected remoteEndpointId: "+ remoteEndpointId);
-
                         if (!remotePeerEndpoints.contains(remoteEndpointId)) {
                             remotePeerEndpoints.add(remoteEndpointId);
+                            Log.d(TAG, "New connection and client is added to list");
                         }
-
                         sendQueueListToClients();
-
                     } else {
                         Log.d(TAG, "Failed connecting to: "+ remoteEndpointName);
+                        Nearby.Connections.rejectConnectionRequest(googleApiClient, remoteEndpointId);
                     }
                 }
             });
@@ -196,10 +199,10 @@ public class Connection implements
     }
 
     private boolean isConnectedToNetwork() {
-        ConnectivityManager connManager =
+        final ConnectivityManager connManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo info = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        final NetworkInfo info = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (info != null && info.isConnectedOrConnecting()) {
             return true;
         }
@@ -226,11 +229,10 @@ public class Connection implements
             googleApiClient.disconnect();
         }*/
 
-        if (MainActivity.isHost) {
+        if (mIsHost) {
             Log.d(TAG, "Disconnecting host.");
             Nearby.Connections.stopAdvertising(googleApiClient);
             Nearby.Connections.stopAllEndpoints(googleApiClient);
-            MainActivity.isHost = false;
             remotePeerEndpoints.clear();
         } else {
             Log.d(TAG, "Disconnecting client.");
@@ -248,11 +250,11 @@ public class Connection implements
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
         MainActivity.UserID = Nearby.Connections.getLocalDeviceId(googleApiClient);
-        if(MainActivity.isHost){
-            advertise();
-        }else{
+        if(mIsHost){
+            advertise("1");
+        }/*else{
             discover();
-        }
+        }*/
     }
 
     @Override
@@ -269,7 +271,7 @@ public class Connection implements
     public void onMessageReceived(String s, byte[] bytes, boolean b) {
         Log.d(TAG, "onMessageReceived");
 
-        if (MainActivity.isHost) {
+        if (mIsHost) {
             queueList.updateQueueList(new Track(parcelableUtil.unmarshall(bytes)));
             sendQueueListToClients();
         } else {
@@ -286,5 +288,9 @@ public class Connection implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed");
+    }
+
+    protected void showToast(String message) {
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
     }
 }

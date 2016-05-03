@@ -17,11 +17,14 @@ import com.spotify.sdk.android.player.Spotify;
 
 import metropolia.edu.jukebox.queue.QueueFragment;
 import metropolia.edu.jukebox.search.SearchFragment;
+import metropolia.edu.jukebox.share.Beacon;
+import metropolia.edu.jukebox.share.ShareFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String TOKEN;
     public static String UserID = "JukeBox";
+    public static String jukeboxLoginAuth = null;
     public static boolean isHost = false;
     public static boolean updateUI = false;
     private static final String TAG = "MainActivity";
@@ -43,13 +46,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TOKEN = CredentialsHandler.getToken(this);
         Intent intent = getIntent();
-        this.beacon = new Beacon(this, this);
-        this.connection = new Connection(this, this);
         this.isHost = intent.getBooleanExtra("isHost", false);
+        this.beacon = new Beacon(this, this);
+        this.connection = new Connection(this, this, isHost);
 
-        //When launching from a notification link
         if (BeaconService.ACTION_DISMISS.equals(getIntent().getAction())) {
-            //Fire a clear action to the service
             Intent mIntent = new Intent(this, BeaconService.class);
             intent.setAction(BeaconService.ACTION_DISMISS);
             startService(mIntent);
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Permission granted or error resolved successfully then we proceed
                 // with publish and subscribe..
-                beacon.subscribe();
+                beacon.publishAndSubscribe();
             } else {
                 // This may mean that user had rejected to grant nearby permission.
                 showToast("Failed to resolve error with code " + resultCode);
@@ -113,19 +114,25 @@ public class MainActivity extends AppCompatActivity {
      * Playback use this fragment to update QueueList ListView
      */
     private void intitializeFragmentTag(){
-        Runnable setup = new Runnable() {
+        new Thread(
+            new Runnable() {
             @Override
             public void run() {
-                while(QueueFragmentTAG.equals("")){
-                    // Wait loop. Is this correct way to ensure that QueueFragmentTAG is set
-                    // and then start player.
+                try {
+                    while(QueueFragmentTAG.equals("")){
+                        Thread.sleep(1000);
+                        // Wait loop. Is this correct way to ensure that QueueFragmentTAG is set
+                        // and then start player.
+                    }
+                    uiUpdateThread();
+                    Log.d(TAG, "start playback");
+                    new Thread(playback).start();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                uiUpdateThread();
-                Log.d(TAG, "start playback");
-                new Thread(playback).start();
             }
-        };
-        new Thread(setup).start();
+        }
+        ).start();
     }
 
     private void uiUpdateThread() {
@@ -161,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new QueueFragment(), getString(R.string.queue));
         adapter.addFrag(new SearchFragment(), getString(R.string.search));
-        adapter.addFrag(new SettingsFragment(), getString(R.string.settings));
+        adapter.addFrag(new ShareFragment(), getString(R.string.settings));
 
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(2);
@@ -194,24 +201,31 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_PERMISSION);
         }
+        beacon.onStart();
         connection.connect();
+        if(!isHost && jukeboxLoginAuth!=null){
+            connection.discover(jukeboxLoginAuth);
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("isHost", isHost);
+        outState.putString("authClientCode", jukeboxLoginAuth);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        jukeboxLoginAuth = savedInstanceState.getString("authClientCode");
         if(!TOKEN.isEmpty())
             isHost = savedInstanceState.getBoolean("isHost");
     }
 
     @Override
     protected void onStop() {
+        beacon.onStop();
         super.onStop();
     }
 

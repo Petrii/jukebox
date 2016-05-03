@@ -17,7 +17,7 @@ public class LoginActivity extends Activity {
     public static final String CLIENT_ID = "5edab87c1536471aab90d32d5c528875";
     private static final String REDIRECT_URI = "lbjukebox://callback";
     private static final int REQUEST_CODE = 48567;
-    private boolean hosting = false;
+    private boolean isHost = false;
     private String token;
 
     @Override
@@ -25,6 +25,11 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         token = CredentialsHandler.getToken(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     public void onLoginButtonClicked(View v){
@@ -35,13 +40,13 @@ public class LoginActivity extends Activity {
             final AuthenticationRequest request = builder.build();
             AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
         } else {
-            hosting = true;
+            isHost = true;
             startMainActivity();
         }
     }
 
     public void onJoinButtonClicked(View v){
-        hosting = false;
+        isHost = false;
         startMainActivity();
     }
 
@@ -57,7 +62,7 @@ public class LoginActivity extends Activity {
                 case TOKEN:
                     Log.d("Got token", ""+response.getAccessToken());
                     CredentialsHandler.setToken(this, response.getAccessToken(), response.getExpiresIn(), TimeUnit.SECONDS);
-                    hosting = true;
+                    isHost = true;
                     startMainActivity();
                     break;
                 // Auth flow returned an error
@@ -76,9 +81,20 @@ public class LoginActivity extends Activity {
     */
     private void startMainActivity() {
         final Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("isHost", hosting);
+        intent.putExtra("isHost", isHost);
         startActivity(intent);
         finish();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("isHost", isHost);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        this.isHost = savedInstanceState.getBoolean("isHost");
+    }
 }
