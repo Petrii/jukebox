@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.resources;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,6 +10,8 @@ import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.Spotify;
 
+import metropolia.edu.jukebox.MainActivity;
+import metropolia.edu.jukebox.login.LoginActivity;
 import metropolia.edu.jukebox.queue.QueueList;
 
 public final class Playback implements PlayerNotificationCallback,

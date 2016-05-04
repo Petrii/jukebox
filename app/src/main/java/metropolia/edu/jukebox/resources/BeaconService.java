@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.resources;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,6 +13,8 @@ import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 
 import java.util.HashSet;
+
+import metropolia.edu.jukebox.MainActivity;
 
 /**
  * Created by petri on 1.5.2016.

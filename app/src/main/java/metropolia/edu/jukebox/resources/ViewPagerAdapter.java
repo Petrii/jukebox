@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.resources;
 
 
 import android.support.v4.app.Fragment;

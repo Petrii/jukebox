@@ -27,4 +27,5 @@
     <string name="playlist_is_empty">Playlist is empty</string>
     <string name="add_music_to_playlist">Add music to playlist</string>
     <string name="enter_party_id">Enter party ID</string>
+    <string name="default_join_code">1234</string>
 </resources>

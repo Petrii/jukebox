@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.login;
 
 import android.content.Context;
 import android.content.SharedPreferences;

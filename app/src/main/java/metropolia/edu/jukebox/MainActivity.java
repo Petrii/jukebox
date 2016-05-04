@@ -15,26 +15,32 @@ import android.widget.Toast;
 
 import com.spotify.sdk.android.player.Spotify;
 
+import metropolia.edu.jukebox.resources.Beacon;
+import metropolia.edu.jukebox.resources.BeaconService;
+import metropolia.edu.jukebox.resources.Connection;
+import metropolia.edu.jukebox.login.CredentialsHandler;
 import metropolia.edu.jukebox.queue.QueueFragment;
+import metropolia.edu.jukebox.resources.Playback;
+import metropolia.edu.jukebox.resources.ViewPagerAdapter;
 import metropolia.edu.jukebox.search.SearchFragment;
-import metropolia.edu.jukebox.share.Beacon;
 import metropolia.edu.jukebox.share.ShareFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String TOKEN;
-    public static String UserID = "JukeBox";
-    public static String jukeboxLoginAuth = null;
-    public static boolean isHost = false;
-    public static boolean updateUI = false;
+    public static String UserID = "JukeBox"; // Default user, used in Votes
+    public static String jukeboxLoginAuth = null; // Auth code from Beacon
+    public static boolean isHost = false; // Indicator if user is Host
+    public static boolean updateUI = false; // Indicator if UI needs to update
     private static final String TAG = "MainActivity";
 
-    public Connection connection;
-    public Beacon beacon;
-    private Playback playback;
-    private String QueueFragmentTAG = "";
-    private QueueFragment queueFragment;
+    public Connection connection; // Communication between phones
+    public Beacon beacon; // Searching beacons
+    private Playback playback; // Spotify player
+    private String QueueFragmentTAG = ""; // QueueFragment tag for helping to call updateUI methods
+    private QueueFragment queueFragment; // =//=
     private ViewPager viewPager;
+    private Intent intent;
 
     private static final int REQUEST_RESOLVE_ERROR = 100;
     private static final int REQUEST_PERMISSION = 42;
@@ -45,10 +51,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TOKEN = CredentialsHandler.getToken(this);
-        Intent intent = getIntent();
+
+        this.intent = getIntent();
         this.isHost = intent.getBooleanExtra("isHost", false);
         this.beacon = new Beacon(this, this);
         this.connection = new Connection(this, this, isHost);
+
 
         if (BeaconService.ACTION_DISMISS.equals(getIntent().getAction())) {
             Intent mIntent = new Intent(this, BeaconService.class);
@@ -62,11 +70,18 @@ public class MainActivity extends AppCompatActivity {
         setupTabIcons();
         intitializeFragmentTag();
 
+        // Initialize Spotify media player if user is hosting
         if(isHost){
             this.playback = new Playback(this, this);
         }
     }
 
+    /** This receive user choice from BLE permission view
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -152,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
                                     queueFragment.updateListView();
                                     updateUI = false;
                                 }
-
                                 queueFragment.updateNowPlaying();
                             }
                         });
@@ -202,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_PERMISSION);
         }
         beacon.onStart();
-        connection.connect();
+        connection.connectGoogleApi();
         if(!isHost && jukeboxLoginAuth!=null){
             connection.discover(jukeboxLoginAuth);
         }

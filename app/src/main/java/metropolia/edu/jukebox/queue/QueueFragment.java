@@ -19,7 +19,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.squareup.picasso.Picasso;
 
 import metropolia.edu.jukebox.MainActivity;
-import metropolia.edu.jukebox.Playback;
+import metropolia.edu.jukebox.resources.Playback;
 import metropolia.edu.jukebox.R;
 
 /**

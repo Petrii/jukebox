@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,9 @@ import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import java.util.concurrent.TimeUnit;
+
+import metropolia.edu.jukebox.MainActivity;
+import metropolia.edu.jukebox.R;
 
 public class LoginActivity extends Activity {
 

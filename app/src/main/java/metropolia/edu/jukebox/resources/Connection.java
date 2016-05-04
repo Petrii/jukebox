@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.resources;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,6 +23,8 @@ import com.google.android.gms.nearby.connection.Connections;
 import java.util.ArrayList;
 import java.util.List;
 
+import metropolia.edu.jukebox.MainActivity;
+import metropolia.edu.jukebox.R;
 import metropolia.edu.jukebox.queue.ParcelableUtil;
 import metropolia.edu.jukebox.queue.QueueList;
 import metropolia.edu.jukebox.queue.Track;
@@ -52,6 +54,7 @@ public class Connection implements
         this.activity = activity;
         this.context = context;
         this.mIsHost = isHost;
+        clientAuthCode = activity.getString(R.string.default_join_code);
 
         googleApiClient = new GoogleApiClient.Builder(this.context)
                 .addConnectionCallbacks(this)
@@ -85,7 +88,7 @@ public class Connection implements
 
     public void discover(String clientAuth) {
         if (!isConnectedToNetwork()) {
-           connect();
+           connectGoogleApi();
         }
         this.clientAuthCode = clientAuth;
         final String serviceId = context.getString(R.string.service_id);
@@ -138,11 +141,12 @@ public class Connection implements
         }
     }
 
-    public void advertise(String clientAuth) {
+    public void advertise() {
         if (!isConnectedToNetwork()) {
             return;
         }
-        clientAuthCode = clientAuth;
+        if(MainActivity.jukeboxLoginAuth!=null)
+            clientAuthCode = MainActivity.jukeboxLoginAuth;
         // The advertising timeout is set to run indefinitely
         long CONNECTION_TIME_OUT = 0L;
 
@@ -211,7 +215,7 @@ public class Connection implements
         return false;
     }
 
-    public void connect() {
+    public void connectGoogleApi() {
         if(!googleApiClient.isConnected()) {
             Log.d(TAG, "Connecting GoogleApiClient.");
             googleApiClient.connect();
@@ -251,10 +255,8 @@ public class Connection implements
         Log.d(TAG, "onConnected");
         MainActivity.UserID = Nearby.Connections.getLocalDeviceId(googleApiClient);
         if(mIsHost){
-            advertise("1");
-        }/*else{
-            discover();
-        }*/
+            advertise();
+        }
     }
 
     @Override

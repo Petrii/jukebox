@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox;
+package metropolia.edu.jukebox.resources;
 
 import com.google.android.gms.nearby.messages.Message;
 

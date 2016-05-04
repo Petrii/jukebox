@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox.share;
+package metropolia.edu.jukebox.resources;
 
 import android.app.Activity;
 import android.content.Context;

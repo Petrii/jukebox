@@ -11,6 +11,21 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias 'jukebox_alias'
+            keyPassword 'fTYjx7mGysVyvep6'
+            storeFile file('D:/AndroidProjects/keystore/jukeboxdebug.keystore')
+            storePassword 'fTYjx7mGysVyvep6'
+        }
+    }
+
     productFlavors {
     }
 }
