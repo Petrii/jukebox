@@ -15,11 +15,11 @@ import android.widget.Toast;
 
 import com.spotify.sdk.android.player.Spotify;
 
+import metropolia.edu.jukebox.login.CredentialsHandler;
+import metropolia.edu.jukebox.queue.QueueFragment;
 import metropolia.edu.jukebox.resources.Beacon;
 import metropolia.edu.jukebox.resources.BeaconService;
 import metropolia.edu.jukebox.resources.Connection;
-import metropolia.edu.jukebox.login.CredentialsHandler;
-import metropolia.edu.jukebox.queue.QueueFragment;
 import metropolia.edu.jukebox.resources.Playback;
 import metropolia.edu.jukebox.resources.ViewPagerAdapter;
 import metropolia.edu.jukebox.search.SearchFragment;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         this.beacon = new Beacon(this, this);
         this.connection = new Connection(this, this, isHost);
 
-
+        // Start BeaconService
         if (BeaconService.ACTION_DISMISS.equals(getIntent().getAction())) {
             Intent mIntent = new Intent(this, BeaconService.class);
             intent.setAction(BeaconService.ACTION_DISMISS);
@@ -76,6 +76,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        final int result = ActivityCompat
+                .checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (result != PackageManager.PERMISSION_GRANTED) {
+            //Ask for the location permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_PERMISSION);
+        }
+        beacon.onStart();
+        connection.connectGoogleApi();
+        if(!isHost && jukeboxLoginAuth!=null){
+            connection.discover(jukeboxLoginAuth);
+        }
+    }
+
     /** This receive user choice from BLE permission view
      *
      * @param requestCode
@@ -89,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Permission granted or error resolved successfully then we proceed
                 // with publish and subscribe..
-                beacon.publishAndSubscribe();
+                beacon.subscribe();
             } else {
                 // This may mean that user had rejected to grant nearby permission.
                 showToast("Failed to resolve error with code " + resultCode);
@@ -124,6 +142,16 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setCustomView(tabShare);
     }
 
+    private void setupViewPager(ViewPager viewPager) {
+        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new QueueFragment(), getString(R.string.queue));
+        adapter.addFrag(new SearchFragment(), getString(R.string.search));
+        adapter.addFrag(new ShareFragment(), getString(R.string.settings));
+
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(2);
+    }
+
     /**
      * This wait QueueFragmentTAG and send it to Playback
      * Playback use this fragment to update QueueList ListView
@@ -150,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
         ).start();
     }
 
+    // User Interface updating thread
     private void uiUpdateThread() {
         queueFragment = (QueueFragment)this
                 .getSupportFragmentManager()
@@ -178,48 +207,18 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new QueueFragment(), getString(R.string.queue));
-        adapter.addFrag(new SearchFragment(), getString(R.string.search));
-        adapter.addFrag(new ShareFragment(), getString(R.string.settings));
-
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(2);
-    }
-
+    // Media controls
     public void mediaResume(){
         playback.resume();
     }
-
     public void mediaPause(){
         playback.pause();
     }
-
     public void mediaNext(){
         playback.next();
     }
-
     public void setTabFragment(String tag){
         QueueFragmentTAG = tag;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        final int result = ActivityCompat
-                .checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (result != PackageManager.PERMISSION_GRANTED) {
-            //Ask for the location permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_PERMISSION);
-        }
-        beacon.onStart();
-        connection.connectGoogleApi();
-        if(!isHost && jukeboxLoginAuth!=null){
-            connection.discover(jukeboxLoginAuth);
-        }
     }
 
     @Override

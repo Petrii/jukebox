@@ -54,6 +54,7 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
         playPause = (Button)view.findViewById(R.id.playPause);
         nextButton = (Button)view.findViewById(R.id.next);
 
+        // Show media buttons only to host
         if (MainActivity.isHost) {
             playPause.setOnClickListener(mToggleMediaButton);
             nextButton.setOnClickListener(mToggleMediaButton);
@@ -65,6 +66,10 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
         return view;
     }
 
+    /**
+     * Media button controller
+     *
+     */
     View.OnClickListener mToggleMediaButton = new View.OnClickListener(){
 
         @Override
@@ -80,7 +85,6 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
                         if (QueueList.getNowPlaying() != null) {
                             ((MainActivity) getActivity()).mediaResume();
                         }
-
                         playPause.setBackgroundResource(android.R.drawable.ic_media_pause);
                     }
                     MainActivity.updateUI = true;
@@ -121,6 +125,9 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
         });
     }
 
+    /**
+     * Basic UI update method
+     */
     public void updateListView(){
         if(!Playback.isPlay())
             playPause.setBackgroundResource(android.R.drawable.ic_media_play);
@@ -130,13 +137,20 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Now playuing UI update
+     * Note: This needs to be fixed. It works but not nicely
+     *
+     */
     public void updateNowPlaying() {
+        // If playing any song
         if(QueueList.getNowPlaying() != null){
             Picasso.with(getContext()).load(QueueList.getNowPlaying().getTrack_image()).into(imageView);
             nowArtist.setText(QueueList.getNowPlaying().getArtist());
             nowTrack.setText(QueueList.getNowPlaying().getName());
         }
 
+        // If there is nothing to play, show tips to user to adding more music
         try {
             if (!Playback.isPlay() && queueList.getTrackList().isEmpty()) {
                 nowArtist.setText(getString(R.string.playlist_is_empty));
@@ -145,7 +159,7 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
                 QueueList.setNowPlaying(null);
             }
         } catch (Exception e) {
-
+            // blaah
         }
 
     }
@@ -183,11 +197,17 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * List swiping up & down, under development
+     *
+     * @param scrollY
+     * @param firstScroll
+     * @param dragging
+     */
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         //frameLayout.animate().translationY(-scrollY);
         //resultsList.animate().translationY(-scrollY);
-
     }
 
     @Override
@@ -195,6 +215,11 @@ public class QueueFragment extends Fragment implements ObservableScrollViewCallb
 
     }
 
+    /**
+     * List swiping up & down, under development
+     *
+     * @param scrollState
+     */
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
         if (scrollState == ScrollState.UP) {

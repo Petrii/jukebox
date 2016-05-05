@@ -8,6 +8,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Bottom tab menu ( Fragment adapter )
+ *
+ */
 public class ViewPagerAdapter extends FragmentPagerAdapter{
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> fragmentTitles = new ArrayList<>();

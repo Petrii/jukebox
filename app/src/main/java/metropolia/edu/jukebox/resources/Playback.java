@@ -14,6 +14,13 @@ import metropolia.edu.jukebox.MainActivity;
 import metropolia.edu.jukebox.login.LoginActivity;
 import metropolia.edu.jukebox.queue.QueueList;
 
+
+/**
+ * Music player controller
+ * Playback implements Spotify API player
+ *
+ * Tread needs improvements!
+ */
 public final class Playback implements PlayerNotificationCallback,
         ConnectionStateCallback,
         Player.InitializationObserver,
@@ -21,13 +28,12 @@ public final class Playback implements PlayerNotificationCallback,
 
     private static final String TAG = "Playback";
     private final Context context;
+    private final MainActivity mainActivity;
     private final Player player;
     private final Config config;
+    private final QueueList queueList;
     private static boolean isPlay = false;
     private boolean isUserInput = false;
-    private int duration = 1000; // Default time: 1 sek
-    private final MainActivity mainActivity;
-    final QueueList queueList;
 
     public Playback(Context context, MainActivity activity ) {
         this.context = context;
@@ -55,30 +61,33 @@ public final class Playback implements PlayerNotificationCallback,
     public void next(){
         player.skipToNext();
         isPlay = false;
-        isUserInput = false;
-    }
-
-    public void repeat(boolean isRepeat) {
-        player.setRepeat(isRepeat);
+        isUserInput = false; // exceptional case, otherwise skipping to next song is not working
     }
 
     @Override
     public void run(){
         try {
             while (true) {
+                // Run code at intervals of one second
                 Thread.sleep(1000);
+                // If player is not playing and User doesn't press any button
                 if ( isPlay == false && isUserInput == false ) {
+                    // Check if queuelist is not empty
                     if ( queueList.getTrackList().size() > 0 ) {
+                        // Adding next track uri to Spotify player
                         this.player.addConnectionStateCallback(Playback.this);
                         this.player.addPlayerNotificationCallback(Playback.this);
                         this.player.play("spotify:track:" + queueList.getTrackList().get(0).getId());
                         this.isPlay = true;
                         this.queueList.deleteTrack();
+                        // Host sends track list to clients because queuelist is altered
                         this.mainActivity.connection.sendQueueListToClients();
+                        // Without this in exchanging song expressed some problems
+                        // Needs to be fixed...
                         Thread.sleep(100);
                         MainActivity.updateUI = true;
                     } else {
-
+                        // Stupid uiUpdate stuff, needs some improvements
                         MainActivity.updateUI = true;
                     }
                 }

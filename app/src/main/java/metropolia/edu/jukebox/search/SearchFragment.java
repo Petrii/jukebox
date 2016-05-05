@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -42,7 +41,6 @@ public class SearchFragment extends Fragment implements Search.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
-        final TextView searchText = (TextView) LayoutInflater.from(this.getContext()).inflate(R.layout.custom_search,null);
         final SearchView searchView = (SearchView) view.findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -69,6 +67,8 @@ public class SearchFragment extends Fragment implements Search.View {
                     artist = i.name;
                 }
 
+                // If user is host, add track to local queuelist and send entire list to clients
+                // If user is client, send track to host. After that host sends back entire queuelist
                 if (MainActivity.isHost) {
                     queueList.addToQueue(item.id, item.name, artist, item.album.images.get(0).url);
                     ((MainActivity) getActivity()).connection.sendQueueListToClients();

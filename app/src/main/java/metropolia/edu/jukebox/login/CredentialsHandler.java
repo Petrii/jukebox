@@ -1,4 +1,8 @@
 package metropolia.edu.jukebox.login;
+/**
+ *  With this handler app saves login "instance".
+ *  This is used for communication with Spotify API
+ */
 
 import android.content.Context;
 import android.content.SharedPreferences;

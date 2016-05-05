@@ -20,12 +20,10 @@ public final class QueueList implements Parcelable{
     private static volatile QueueList instance;
     private static final String TAG = "QueueList";
     private static List<Track> trackList = new ArrayList<>();
-
+    private static Track nowPlaying;
     public static void setNowPlaying(Track nowPlaying) {
         QueueList.nowPlaying = nowPlaying;
     }
-
-    private static Track nowPlaying;
 
     public static final Creator<QueueList> CREATOR = new Creator(){
         public QueueList createFromParcel(Parcel source){
@@ -108,7 +106,15 @@ public final class QueueList implements Parcelable{
         }
     }
 
-
+    /**
+     * This is used when track will arrives over network.
+     * If the local playlist does not contain a record of track then add it,
+     * but if does try update track's vote value.
+     *
+     * Finally reorder list and set updateUi flag on
+     *
+     * @param track
+     */
     public synchronized void updateQueueList(Track track) {
         boolean trackIsListed = false;
 
@@ -130,8 +136,8 @@ public final class QueueList implements Parcelable{
             Log.d(TAG, "Track is not listed");
             trackList.add(track);
         }
-        MainActivity.updateUI = true;
         Collections.sort(trackList, new OrderListByVotes());
+        MainActivity.updateUI = true;
     }
 
     /**
@@ -154,22 +160,11 @@ public final class QueueList implements Parcelable{
     }
 
     /**
-     *  Remove now playing track from queue list
+     *  Save playing track because otherwise there is no possibility to
+     *  display the current track info. Then remove the track from playlist
      */
     public synchronized void deleteTrack(){
         nowPlaying = trackList.get(0);
         trackList.remove(0);
-    }
-
-    public int getListSize(){
-       if(trackList == null){
-           return 0;
-       }
-        return trackList.size();
-    }
-
-    public synchronized void clearData() {
-        if(!trackList.isEmpty())
-            trackList.clear();
     }
 }

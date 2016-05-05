@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 /**
  * Created by petri on 16.4.2016.
+ *
  */
 public class OrderListByVotes implements Comparator<Track> {
     @Override

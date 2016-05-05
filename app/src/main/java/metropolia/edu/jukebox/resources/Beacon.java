@@ -44,6 +44,7 @@ public class Beacon implements
     public Beacon(Context context, Activity activity){
         this.context = context;
         this.activity = activity;
+        // Initialize google api connection
         mGoogleApiClient = new GoogleApiClient.Builder(this.context)
                 .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(this)
@@ -55,7 +56,8 @@ public class Beacon implements
     }
 
     private MessageListener mMessageListener = new MessageListener() {
-        // Called each time a new message is discovered nearby.
+        // Called each time a new message is discovered nearby. If found correct message stop
+        // Beacon service
         @Override
         public void onFound(Message message) {
             if(message.getNamespace().equals(NAMESPACE) && message.getType().equals(TYPE)){
@@ -85,7 +87,7 @@ public class Beacon implements
         mGoogleApiClient.disconnect();
     }
 
-    public void publishAndSubscribe(){
+    public void subscribe(){
         final SubscribeOptions options = new SubscribeOptions.Builder()
         .setStrategy(Strategy.BLE_ONLY)
         .setCallback(new SubscribeCallback() {
@@ -116,7 +118,7 @@ public class Beacon implements
                 new ErrorCheckingCallback("getPermissionStatus", new Runnable(){
                     @Override
                     public void run() {
-                        publishAndSubscribe();
+                        subscribe();
                     }
                 })
         );

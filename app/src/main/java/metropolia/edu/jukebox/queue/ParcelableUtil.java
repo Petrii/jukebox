@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
+ * This helps parcel a object.
+ *
  * Created by manuelgripentrog on 19.4.16.
  */
 public class ParcelableUtil {

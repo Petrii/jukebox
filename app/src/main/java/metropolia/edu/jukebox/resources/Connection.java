@@ -66,6 +66,10 @@ public class Connection implements
         parcelableUtil = new ParcelableUtil();
     }
 
+    /**
+     * Sends entire queuelist to clients
+     *
+     */
     public void sendQueueListToClients() {
         if(!remotePeerEndpoints.isEmpty()){
             final byte[] payload = parcelableUtil.marshall(queueList);
@@ -73,6 +77,12 @@ public class Connection implements
         }
     }
 
+    /**
+     * Sends only one track to host. This is used when adding new track or when user gives vote
+     *
+     * @param track
+     * @return
+     */
     public boolean sendTrackToHost(Track track) {
         if(googleApiClient.isConnected()) {
             if (remoteHostEndpoint != null) {
@@ -86,6 +96,11 @@ public class Connection implements
         }
     }
 
+    /**
+     * Start discovering host and save authentication code from user input
+     *
+     * @param clientAuth
+     */
     public void discover(String clientAuth) {
         if (!isConnectedToNetwork()) {
            connectGoogleApi();
@@ -108,6 +123,8 @@ public class Connection implements
 
     /**
      * Client
+     *
+     * When found a host then try connect to it with authentication code
      *
      * @param endpointId
      * @param deviceId
@@ -169,6 +186,8 @@ public class Connection implements
     /**
      * Server
      *
+     * clientAuthCode only demonstrate how could take advantage of the Beacon
+     *
      * @param remoteEndpointId
      * @param remoteDeviceId
      * @param remoteEndpointName
@@ -181,6 +200,7 @@ public class Connection implements
                                     byte[] payload) {
         final byte[] myPayload = null;
         final String code = new String(payload);
+        // Check if is user is host and  client authentication code is same as host's authentication code
         if (mIsHost && code.equals(clientAuthCode)) {
             Nearby.Connections.acceptConnectionRequest(googleApiClient, remoteEndpointId, myPayload, this).setResultCallback(new ResultCallback<Status>() {
                 @Override
@@ -226,13 +246,6 @@ public class Connection implements
         if (!isConnectedToNetwork()) {
             return;
         }
-
-        /*
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            Log.d(TAG, "Disconnecting GoogleApiClient");
-            googleApiClient.disconnect();
-        }*/
-
         if (mIsHost) {
             Log.d(TAG, "Disconnecting host.");
             Nearby.Connections.stopAdvertising(googleApiClient);
@@ -273,12 +286,17 @@ public class Connection implements
     public void onMessageReceived(String s, byte[] bytes, boolean b) {
         Log.d(TAG, "onMessageReceived");
 
+        // Host and client handling
         if (mIsHost) {
+            // Add new track from client to local the queuelist
             queueList.updateQueueList(new Track(parcelableUtil.unmarshall(bytes)));
+            // Send tracklist for everyone
             sendQueueListToClients();
         } else {
+            // Receive tracklist from Host and replace entire queuelist
             new QueueList(parcelableUtil.unmarshall(bytes));
         }
+        // set updateUI flag
         MainActivity.updateUI = true;
     }
 

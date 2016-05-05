@@ -35,6 +35,11 @@ public class LoginActivity extends Activity {
         super.onStart();
     }
 
+    /** If token is null or i.e. user isn't logged in Spotify. Then open Spotify API login form.
+     *  Else go to the MainActivity
+     *
+     * @param v
+     */
     public void onLoginButtonClicked(View v){
         if( token == null ){
             final AuthenticationRequest.Builder builder =
@@ -48,11 +53,22 @@ public class LoginActivity extends Activity {
         }
     }
 
+    /**
+     * @param v
+     */
     public void onJoinButtonClicked(View v){
         isHost = false;
         startMainActivity();
     }
 
+    /**
+     * Spotify login API activity result.
+     * If request code is TOKEN, login is successful. Save login token to CredentialsHandler.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -89,12 +105,22 @@ public class LoginActivity extends Activity {
         finish();
     }
 
+    /**
+     * This save instance is under the development
+     *
+     * @param outState
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("isHost", isHost);
     }
 
+    /**
+     * This save instance is under the development
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
