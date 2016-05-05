@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#232326">
+    android:background="@color/colorBaseDark">
 
     <LinearLayout
         android:orientation="vertical"
@@ -27,7 +27,7 @@
             android:layout_height="0dp"
             android:text="@string/welcome_text"
             android:id="@+id/welcome_text"
-            android:textColor="#a493e2"
+            android:textColor="@color/colorBase"
             android:layout_weight="0.40"
             android:textAlignment="center"
             android:textIsSelectable="false"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:onClick="onLoginButtonClicked"
             android:text="@string/login_button"
-            android:background="#a493e2"
+            android:background="@color/colorBase"
             android:textColor="#ffffff"
             android:layout_marginRight="5dp"
             android:textSize="14sp" />
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:onClick="onJoinButtonClicked"
             android:text="@string/join_a_party"
-            android:textColor="#a493e2"
+            android:textColor="@color/colorBase"
             android:layout_marginLeft="10dp"
             android:textSize="14sp"
             android:layout_width="150dp"/>

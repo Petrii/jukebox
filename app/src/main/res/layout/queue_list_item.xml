@@ -37,7 +37,7 @@
                 android:scrollHorizontally="true"
                 android:text="@string/track_name"
                 android:textSize="16sp"
-                android:textColor="#FFF"
+                android:textColor="@color/colorWhite"
                 android:singleLine="false"
                 android:visibility="visible"
                 android:gravity="bottom"
@@ -52,7 +52,7 @@
                 android:scrollHorizontally="false"
                 android:text="@string/artist_name"
                 android:textSize="14sp"
-                android:textColor="#DCDCDC" />
+                android:textColor="@color/colorGrey" />
 
         </LinearLayout>
 
@@ -82,7 +82,7 @@
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#DCDCDC"
+                android:textColor="@color/colorGrey"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:text="0 likes" />
@@ -93,6 +93,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#DCDCDC" />
+        android:background="@color/colorGrey" />
 
 </LinearLayout>

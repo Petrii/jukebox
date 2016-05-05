@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorBase</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorBase</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="windowActionBar">false</item>
@@ -26,30 +26,30 @@
     </style>
 
     <style name="SearchTextViewTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:textColor">#FFF</item>
-        <item name="android:editTextColor">#FFF</item>
-        <item name="android:queryHint">#FFF</item>
-        <item name="android:textColorHint">#FFF</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:editTextColor">@color/colorWhite</item>
+        <item name="android:queryHint">@color/colorWhite</item>
+        <item name="android:textColorHint">@color/colorWhite</item>
     </style>
 
     <style name="AppBarLayout">
-        <item name="android:textColor">#FFF</item>
+        <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:background">#a291df</item>
+        <item name="android:background">@color/colorBase</item>
     </style>
 
     <style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
         <item name="tabMaxWidth">50dp</item>
-        <item name="tabIndicatorColor">#FFF</item>
+        <item name="tabIndicatorColor">@color/colorWhite</item>
         <item name="tabIndicatorHeight">2dp</item>
         <item name="tabBackground">?attr/selectableItemBackground</item>
         <item name="tabTextAppearance">@style/TabTextAppearance</item>
-        <item name="tabSelectedTextColor">@android:color/white</item>
+        <item name="tabSelectedTextColor">@color/colorWhite</item>
     </style>
 
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#FFF</item>
+        <item name="android:textColor">@color/colorWhite</item>
         <item name="textAllCaps">true</item>
     </style>
 

@@ -57,7 +57,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:id="@+id/imageView"
-            android:src="@drawable/ic_add_white_48dp"
+            android:src="@drawable/add_music"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
             android:contentDescription="@string/add_icon"

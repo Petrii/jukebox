@@ -7,7 +7,8 @@
         android:id="@+id/frame_playing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:minHeight="65dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -15,7 +16,8 @@
             android:id="@+id/artist_image"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:contentDescription="@string/artistbigimage" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -23,11 +25,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:background="#82232323"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1">
@@ -38,14 +41,14 @@
                     android:text="@string/playlist_is_empty"
                     android:id="@+id/now_artist"
                     android:textSize="20sp"
-                    android:textColor="#FFF"
+                    android:textColor="@color/colorWhite"
                     android:layout_gravity="left" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/now_track"
                     android:textSize="16sp"
-                    android:textColor="#FFF"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/add_music_to_playlist" />
             </LinearLayout>
 
@@ -75,6 +78,5 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/queue_list"
-        android:visibility="visible"
-        android:layout_marginTop="8dp" />
+        android:visibility="visible" />
 </LinearLayout>
