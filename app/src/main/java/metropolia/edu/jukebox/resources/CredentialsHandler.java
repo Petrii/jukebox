@@ -1,4 +1,4 @@
-package metropolia.edu.jukebox.login;
+package metropolia.edu.jukebox.resources;
 /**
  *  With this handler app saves login "instance".
  *  This is used for communication with Spotify API

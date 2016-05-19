@@ -11,7 +11,6 @@ import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.Spotify;
 
 import metropolia.edu.jukebox.MainActivity;
-import metropolia.edu.jukebox.login.LoginActivity;
 import metropolia.edu.jukebox.queue.QueueList;
 
 
@@ -39,7 +38,7 @@ public final class Playback implements PlayerNotificationCallback,
         this.context = context;
         this.mainActivity = activity;
         this.queueList = QueueList.getInstance();
-        this.config = new Config(this.context, MainActivity.TOKEN, LoginActivity.CLIENT_ID);
+        this.config = new Config(this.context, MainActivity.TOKEN, MainActivity.CLIENT_ID);
         this.player = Spotify.getPlayer(this.config, this, this);
     }
 

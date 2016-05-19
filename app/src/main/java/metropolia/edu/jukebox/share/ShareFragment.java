@@ -14,7 +14,9 @@ import metropolia.edu.jukebox.R;
 
 
 public class ShareFragment extends PreferenceFragmentCompat implements View.OnClickListener{
-    private Button joinButton;
+
+
+    private Button joinButton, createButton, button_join;
     private EditText joinCode;
     private TextView shareJoinCode;
     public static final String TAG = "Settings";
@@ -22,6 +24,7 @@ public class ShareFragment extends PreferenceFragmentCompat implements View.OnCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity.isActive = true;
     }
 
     @Override
@@ -53,9 +56,11 @@ public class ShareFragment extends PreferenceFragmentCompat implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.join_party){
-            MainActivity.jukeboxLoginAuth = joinCode.getText().toString();
-            ((MainActivity) getActivity()).connection.discover(joinCode.getText().toString());
+        switch(v.getId()){
+            case R.id.join_party:
+                MainActivity.jukeboxLoginAuth = joinCode.getText().toString();
+                ((MainActivity) getActivity()).connection.discover(joinCode.getText().toString());
+                break;
         }
     }
 }

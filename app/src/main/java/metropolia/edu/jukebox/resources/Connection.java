@@ -50,10 +50,9 @@ public class Connection implements
     private List<String> remotePeerEndpoints = new ArrayList<>();
 
 
-    public Connection(Context context, Activity activity, boolean isHost) {
+    public Connection(Context context, Activity activity) {
         this.activity = activity;
         this.context = context;
-        this.mIsHost = isHost;
         clientAuthCode = activity.getString(R.string.default_join_code);
 
         googleApiClient = new GoogleApiClient.Builder(this.context)
@@ -160,7 +159,7 @@ public class Connection implements
 
     public void advertise() {
         if (!isConnectedToNetwork()) {
-            return;
+            connectGoogleApi();
         }
         if(MainActivity.jukeboxLoginAuth!=null)
             clientAuthCode = MainActivity.jukeboxLoginAuth;
@@ -267,9 +266,6 @@ public class Connection implements
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
         MainActivity.UserID = Nearby.Connections.getLocalDeviceId(googleApiClient);
-        if(mIsHost){
-            advertise();
-        }
     }
 
     @Override

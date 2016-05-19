@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.models.Track;
 
 
@@ -31,14 +30,14 @@ public class SearchPresenter implements Search.ActionListener {
     @Override
     public void init(String accessToken) {
         logMessage("Api Client created");
-        SpotifyApi spotifyApi = new SpotifyApi();
+        //SpotifyApi spotifyApi = new SpotifyApi();
 
         if (accessToken != null) {
-            spotifyApi.setAccessToken(accessToken);
+            //spotifyApi.setAccessToken(accessToken);
         } else {
             logError("No valid access token");
         }
-        mSearchPager = new SearchPager(spotifyApi.getService());
+        //mSearchPager = new SearchPager(spotifyApi.getService());
     }
 
 
